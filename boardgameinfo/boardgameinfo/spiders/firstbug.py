@@ -8,7 +8,6 @@ import threading
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-from sys import argv
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.spiders import Spider
@@ -16,65 +15,28 @@ import scrapy
 #from pydispatch import dispatcher
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
 import mysql.connector
 #from mysql.connector import connection
 
-start_num = int(argv[1])
-end_num = start_num + int(argv[2])
-langDep_dict = {
-    'No necessary in-game text':0,
-    'Some necessary text - easily memorized or small crib sheet':1,
-    'Moderate in-game text - needs crib sheet or paste ups':2,
-    'Extensive use of text - massive conversion needed to be playable':3,
-    'Unplayable in another language':4
-}
+global gameid
 class ProductSpider(Spider):
     name = 'boardgameinfo'
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/boardgame/' 
-    start_urls = [base_url+str(1)]
-
-    cookies = {}
-
-    headers = {
-        # 'Connection': 'keep - alive',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36'
-    }
-
-    meta = {
-        'dont_redirect': True,  
-        'handle_httpstatus_list': [301, 302, 404]  
-    }
-    gameid = ''
-    gamename = ''
+    start_urls = [base_url]
 
     def __init__(self):
-        self.driver = webdriver.PhantomJS(executable_path='D:/Drivers/phantomjs-2.1.1-windows/bin/phantomjs.exe')
+        self.driver = webdriver.PhantomJS(executable_path= 'D:/Drivers/phantomjs-2.1.1-windows/bin/phantomjs.exe')
         self.driver.set_page_load_timeout(15)
-        #scrapy.Request(self.start_urls[0],callback=self.parse)
         #dispatcher.connect(self.spider_closed, signals.spider_closed)
-
-    def parse(self,response):
-        print "in parse"
-        self.gamename = response.url.split('/')[-1]
-        self.gameid = response.url.split('/')[-2]
-        if self.gameid == 'boardgame':
-            self.gameid = response.url.split('/')[-1]
-            self.gamename = response.url.split('/')[-2]
-
         try:
-            print response.url
-            self.driver.get(response.url)
-            self.sub_parse(response)
-        except Exception,e:
-            print 'time out after 15 seconds when loading page still processing'
-            #self.driver.execute_script('window.stop()')
-
-        try:
-            for self.gameid in range(start_num,end_num):
-                self.start_urls[0] = self.base_url + str(self.gameid)
-                #print self.start_urls[0]
-                yield scrapy.Request(self.start_urls[0],callback=self.parse)
+            for gameid in range(5,10):
+            	self.start_urls[0] = base_url + str(gameid)
+            	scrapy.Request(self.start_urls[0],callback=self.parse)
         except Exception,e:
             print e
             with open('error.log','w+') as f:
@@ -82,40 +44,36 @@ class ProductSpider(Spider):
                 #f.write(url)
             self.driver.save_screenshot('D:\screenshot.png')
 
-    def sub_parse(self,response):
-        print "in sub_parse"
-        print response.url
+    def parse(self,response):
         #print get_base_url(response)
         #res = self.driver.get(response.url)
+        name = response.url.split('/')[-1]
+        gameid = response.url.split('/')[-2]
+
+        try:
+            self.driver.get(response.url)
+        except Exception,e:
+            print 'time out after 15 seconds when loading page still processing'
+            self.driver.execute_script('window.stop()')
 
         #year_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[1]/div/div[2]/h1/span"
         year_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[1]/div/div[2]/h1/span"
         try:
-            year = self.driver.find_element_by_xpath(year_xpath).text
-            year = year.strip('(').strip(')')
-            if year.isdigit():
-                year = year
-            else:
-                year = ''
+            year = self.driver.find_element_by_xpath(year_xpath).text.strip('(').strip(')')
         except Exception,e:
             year = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' year ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' year ' + 'NOT FOUND'
                 f.write(error_msg)
         minAge_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[3]/div[1]"
         #minAge_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[3]/div[1]/span"
         #minAge = self.driver.find_element_by_xpath(minAge_xpath).text
         try:
-            minAge = self.driver.find_element_by_xpath(minAge_xpath).text
-            minAge = minAge.strip('Age: ').strip('+')
-            if minAge.isdigit():
-                minAge = minAge
-            else:
-                minAge = ''
+            minAge = self.driver.find_element_by_xpath(minAge_xpath).text.strip('Age: ').strip('+')
         except Exception,e:
             minAge = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' minAge ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' minAge ' + 'NOT FOUND'
                 f.write(error_msg)
         #print minAge.text
         #print minAge.unicode
@@ -127,7 +85,7 @@ class ProductSpider(Spider):
         except Exception,e:
             rateScore = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' rateScore ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' rateScore ' + 'NOT FOUND'
                 f.write(error_msg)
         #rateScore'
         rateNum_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[1]/div/div[2]/ul/li/a[1]"
@@ -140,7 +98,7 @@ class ProductSpider(Spider):
         except Exception,e:
             rateNum = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' rateNum ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' rateNum ' + 'NOT FOUND'
                 f.write(error_msg)
         #rateNum
         #rank_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[1]/flags-module/div/div[2]/div/ul[1]/li/span[2]/a"
@@ -154,7 +112,7 @@ class ProductSpider(Spider):
         except Exception,e:
             rank = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' rank ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' rank ' + 'NOT FOUND'
                 f.write(error_msg)
 
         weight_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[4]/div[1]/span[2]/span"
@@ -163,28 +121,18 @@ class ProductSpider(Spider):
         except Exception,e:
             weight = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' weight ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' weight ' + 'NOT FOUND'
                 f.write(error_msg)
         #weight
-        mintime_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[2]/div[1]/span/span/span"
-        maxtime_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[2]/div[1]/span/span/span[2]"
+        time_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[2]/div[1]/span/span/span"
         try:
-            mintime = self.driver.find_element_by_xpath(mintime_xpath).text
+            time = self.driver.find_element_by_xpath(time_xpath).text
         except Exception,e:
-            mintime = ''
+            time = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' mintime ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' time ' + 'NOT FOUND'
                 f.write(error_msg)
-        #mintime.text
-        try:
-            maxtime = self.driver.find_element_by_xpath(maxtime_xpath).text
-            maxtime = maxtime.strip(u'\u2013').strip(' ')
-        except Exception,e:
-            maxtime = ''
-            with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' maxtime ' + 'NOT FOUND'
-                f.write(error_msg)
-        #mintime.text
+        #time.text
         
         minplayer_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[1]/div[1]/span/span[1]"
         maxplayer_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[2]/gameplay-module/div/div/ul/li[1]/div[1]/span/span[2]"
@@ -194,15 +142,14 @@ class ProductSpider(Spider):
         except Exception,e:
             minplayer = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' minplayer ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' minplayer ' + 'NOT FOUND'
                 f.write(error_msg)
         try:
-            maxplayer = self.driver.find_element_by_xpath(maxplayer_xpath).text
-            maxplayer = maxplayer.strip(u'\u2013').strip(' ')
+            maxplayer = self.driver.find_element_by_xpath(maxplayer_xpath).text.strip(u'\u2013').strip(' ')
         except Exception,e:
             maxplayer = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' maxplayer ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' maxplayer ' + 'NOT FOUND'
                 f.write(error_msg)
         try:
             #bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text.strip(u'\u2013').strip(u'\u2014').strip('Best: ')
@@ -214,25 +161,10 @@ class ProductSpider(Spider):
         except Exception,e:
             bestplayer = ''
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' bestplayer ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' bestplayer ' + 'NOT FOUND'
                 f.write(error_msg)
         #min-max players
-        langDep_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/div/ui-view/ui-view/div[1]/overview-module/description-module/div/div[2]/div/div[3]/div[2]/div[1]/div/ul/li/div[2]/span/span"
-        try:
-            #bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text.strip(u'\u2013').strip(u'\u2014').strip('Best: ')
-            langDep = self.driver.find_element_by_xpath(langDep_xpath).text
-            print langDep
-            if langDep_dict.has_key(langDep): 
-                langDep = langDep_dict[langDep]
-                print langDep
-            else:
-                langDep = ''  
-        except Exception,e:
-            langDep = ''
-            with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' langDep ' + 'NOT FOUND'
-                f.write(error_msg)
-        #langDeplvl
+        
         #designers_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/ng-include/div/div/div[2]/div[3]/div/ul/li[1]/popup-list//span/a"
         designers_xpath = "//popup-list[@items=\"geekitemctrl.geekitem.data.item.links.boardgamedesigner\"]//span/a"
         try:
@@ -240,7 +172,7 @@ class ProductSpider(Spider):
         except Exception,e:
             designers = []
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' designers ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' designers ' + 'NOT FOUND'
                 f.write(error_msg)
 
         artists_xpath = "//popup-list[@items=\"geekitemctrl.geekitem.data.item.links.boardgameartist\"]//span/a"
@@ -249,7 +181,7 @@ class ProductSpider(Spider):
         except Exception,e:
             artists = []
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' artists ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' artists ' + 'NOT FOUND'
                 f.write(error_msg)
 
         publishers_xpath = "//popup-list[@items=\"geekitemctrl.geekitem.data.item.links.boardgamepublisher\"]//span/a"
@@ -258,7 +190,7 @@ class ProductSpider(Spider):
         except Exception,e:
             publishers = []
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' publishers ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' publishers ' + 'NOT FOUND'
                 f.write(error_msg)
 
         categorys_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/div/ui-view/ui-view/div[1]/overview-module/description-module/div/div[2]/div/div[1]/classifications-module/div/div[2]/ul/li[2]/div[2]/popup-list//span/a"
@@ -267,7 +199,7 @@ class ProductSpider(Spider):
         except Exception,e:
             categorys = []
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' categorys ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' categorys ' + 'NOT FOUND'
                 f.write(error_msg)
 
         mechanism_xpath = "//*[@id=\"mainbody\"]/div/div[1]/div[1]/div[2]/ng-include/div/div/ui-view/ui-view/div[1]/overview-module/description-module/div/div[2]/div/div[1]/classifications-module/div/div[2]/ul/li[3]/div[2]/popup-list//span/a"
@@ -276,7 +208,7 @@ class ProductSpider(Spider):
         except Exception,e:
             mechanisms = []
             with open('error.log','w+') as f:
-                error_msg = str(self.gameid) + ' mechanisms ' + 'NOT FOUND'
+                error_msg = str(gameid) + ' mechanisms ' + 'NOT FOUND'
                 f.write(error_msg)
         
         
@@ -285,14 +217,14 @@ class ProductSpider(Spider):
         value_str = '('
 
         column_str += 'gameid,'
-        value_str += str(self.gameid)+','
+        value_str += str(gameid)+','
 
-        print self.gamename
-        if self.gamename == '':
+        print name
+        if name == '':
             column_str += ''
         else:
             column_str += 'name,'
-            value_str += '"'+str(self.gamename)+'",'
+            value_str += '"'+str(name)+'",'
         
         print year
         if year == '':
@@ -336,18 +268,12 @@ class ProductSpider(Spider):
             column_str += 'weight,'
             value_str += str(weight)+','
 
-        print mintime
-        if mintime == '':
+        print time
+        if time == '':
             column_str += ''
         else:
-            column_str += 'mintime,'
-            value_str += str(mintime)+','
-        print maxtime
-        if maxtime == '':
-            column_str += ''
-        else:
-            column_str += 'maxtime,'
-            value_str += str(maxtime)+','
+            column_str += 'time,'
+            value_str += str(time)+','
 
         print minplayer
         if minplayer == '':
@@ -369,13 +295,6 @@ class ProductSpider(Spider):
         else:
             column_str += 'bestplayer,'
             value_str += str(bestplayer)+','
-
-        print langDep
-        if langDep == '':
-            column_str += ''
-        else:
-            column_str += 'langDep,'
-            value_str += str(langDep)+','
         
         mechanism_str = ''
         designer_str = ''
@@ -439,9 +358,9 @@ class ProductSpider(Spider):
 
         schema_name = 'boardgames'
         table_name = 'bggdata'
-        #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)" 
-        #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
-        #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
+        #column_str = "(gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,name)" 
+        #value_str = str(gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
+        #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         print sql
@@ -454,15 +373,13 @@ class ProductSpider(Spider):
         cur.close()
         con.commit()
         con.close()
-        #self.driver.quit()
-        
 
-        #self.driver.quit()
+        self.driver.quit()
         #WebDriverWait(res,60).until(EC.presence_of_all_elements_located((By.XPATH,"//div[@id='content']/table"))) 
         #text = res.find_elements_by_xpath("//div[@id='content']/table")
         #print text
 
 if __name__ == '__main__':
-    process = CrawlerProcess()
+    process =CrawlerProcess()
     process.crawl(ProductSpider)
     process.start()
