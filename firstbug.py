@@ -47,6 +47,7 @@ class ProductSpider(Spider):
     }
     gameid = ''
     gamename = ''
+    gametype = ''
 
     def __init__(self):
         self.driver = webdriver.PhantomJS(executable_path='D:/Drivers/phantomjs-2.1.1-windows/bin/phantomjs.exe')
@@ -58,14 +59,18 @@ class ProductSpider(Spider):
         print "in parse"
         self.gamename = response.url.split('/')[-1]
         self.gameid = response.url.split('/')[-2]
+        self.gametype = response.url.split('/')[-3]
         if self.gameid == 'boardgame':
             self.gameid = response.url.split('/')[-1]
             self.gamename = response.url.split('/')[-2]
 
         try:
-            print response.url
-            self.driver.get(response.url)
-            self.sub_parse(response)
+            if self.gametype == 'rpgitem':
+                pass
+            else:
+                print response.url
+                self.driver.get(response.url)
+                self.sub_parse(response)
         except Exception,e:
             print 'time out after 15 seconds when loading page still processing'
             #self.driver.execute_script('window.stop()')
