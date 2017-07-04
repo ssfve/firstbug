@@ -296,7 +296,7 @@ class ProductSpider(Spider):
         if self.gamename == '':
             column_str += ''
         else:
-            column_str += 'name,'
+            column_str += 'nameEN,'
             value_str += '"'+str(self.gamename)+'",'
         
         print year
@@ -453,6 +453,7 @@ class ProductSpider(Spider):
         cur = con.cursor()
         try:
             cur.execute(sql)
+            print 'SQL EXECUTION SUCCESS!'
         except Exception,e:
             print 'error when executing sql'
             print e
