@@ -19,6 +19,9 @@ from selenium import webdriver
 import mysql.connector
 #from mysql.connector import connection
 
+schema_name = 'boardgames'
+table_name = 'bggdata'
+
 start_num = int(argv[1])
 end_num = start_num + int(argv[2])
 langDep_dict = {
@@ -32,7 +35,7 @@ class ProductSpider(Spider):
     name = 'boardgameinfo'
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/boardgame/' 
-    start_urls = [base_url+str(1)]
+    start_urls = [base_url+str(argv[1])]
 
     cookies = {}
 
@@ -51,7 +54,7 @@ class ProductSpider(Spider):
 
     def __init__(self):
         self.driver = webdriver.PhantomJS(executable_path='D:/Drivers/phantomjs-2.1.1-windows/bin/phantomjs.exe')
-        self.driver.set_page_load_timeout(15)
+        self.driver.set_page_load_timeout(25)
         #scrapy.Request(self.start_urls[0],callback=self.parse)
         #dispatcher.connect(self.spider_closed, signals.spider_closed)
 
@@ -67,12 +70,18 @@ class ProductSpider(Spider):
         try:
             if self.gametype == 'rpgitem':
                 pass
+            elif self.gametype == 'videogame':
+                pass
+            elif self.gametype == 'videogamehardware':
+                pass
+            elif self.gametype == 'rpgissue':
+                pass
             else:
                 print response.url
                 self.driver.get(response.url)
                 self.sub_parse(response)
         except Exception,e:
-            print 'time out after 15 seconds when loading page still processing'
+            print 'time out after 25 seconds when loading page still processing'
             #self.driver.execute_script('window.stop()')
 
         try:
@@ -213,9 +222,9 @@ class ProductSpider(Spider):
             #bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text.strip(u'\u2013').strip(u'\u2014').strip('Best: ')
             bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text
             if bestplayer[-1].isdigit():
-            	bestplayer = bestplayer[-1]
+                bestplayer = bestplayer[-1]
             else:
-            	bestplayer = ''  
+                bestplayer = ''  
         except Exception,e:
             bestplayer = ''
             with open('error.log','w+') as f:
@@ -298,7 +307,37 @@ class ProductSpider(Spider):
         else:
             column_str += 'nameEN,'
             value_str += '"'+str(self.gamename)+'",'
+
+        try:
+            sql = "SELECT nameCN FROM "+schema_name+'.'+table_name+' where gameid = '+self.gameid
+        except Exception,e:
+            print e
+        print sql
+
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        cur = con.cursor()
+        try:
+            cur.execute(sql)
+            records = cur.fetchall()
+            print records
+            if len(records) == 0:
+                pass
+            else:
+                data = list(records[0])
+                nameCN = str(data[0])
+                con.commit()
+            print 'SQL EXECUTION SUCCESS!'
+            if nameCN == '':
+                column_str += ''
+            else:
+                column_str += 'nameCN,'
+                value_str += '"'+str(nameCN)+'",'
+        except Exception,e:
+            print 'error when executing sql'
+            print e
+
         
+
         print year
         if year == '':
             column_str += ''
@@ -440,17 +479,16 @@ class ProductSpider(Spider):
         else:
             value_str += ')'
 
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        
 
-        schema_name = 'boardgames'
-        table_name = 'bggdata'
+
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)" 
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         print sql
-        cur = con.cursor()
+        
         try:
             cur.execute(sql)
             print 'SQL EXECUTION SUCCESS!'
