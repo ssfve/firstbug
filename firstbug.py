@@ -256,7 +256,7 @@ class ProductSpider(Spider):
             with open('error.log','w+') as f:
                 error_msg = str(self.gameid) + ' designers ' + 'NOT FOUND'
                 f.write(error_msg)
-
+        #//popup-list/span[2]/a
         artists_xpath = "//popup-list[@items=\"geekitemctrl.geekitem.data.item.links.boardgameartist\"]//span/a"
         try:
             artists = self.driver.find_elements_by_xpath(artists_xpath)
