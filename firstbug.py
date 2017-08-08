@@ -222,7 +222,12 @@ class ProductSpider(Spider):
             #bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text.strip(u'\u2013').strip(u'\u2014').strip('Best: ')
             bestplayer = self.driver.find_element_by_xpath(bestplayer_xpath).text
             if bestplayer[-1].isdigit():
+                if bestplayer != bestplayer.split(',')[-1]:
+                    bestplayer = bestplayer.split(',')[-1]
+                if bestplayer != bestplayer.split('–')[-1]:
+                    bestplayer = bestplayer.split('–')[-1]
                 bestplayer = bestplayer[-1]
+                #print bestplayer
             else:
                 bestplayer = ''  
         except Exception,e:
