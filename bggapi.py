@@ -1,10 +1,10 @@
-# -*- coding:utf-8 -*- 
+# -*- coding:utf-8 -*-
 
 import os
 import io
 import requests
 import random
-from faker import Factory
+#from faker import Factory
 import threading
 import sys
 reload(sys)
@@ -12,9 +12,9 @@ sys.setdefaultencoding('utf8')
 
 from sys import argv
 
-try: 
+try:
     import xml.etree.cElementTree as ET
-except ImportError: 
+except ImportError:
     import xml.etree.ElementTree as ET
 
 import urllib2
@@ -61,8 +61,9 @@ def sql_gen_str(string):
 
 def bgg_xml_reader():
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
-    base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1' 
-    con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
+    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
     global column_str, value_str, var_dict
     for gameid in range(start_num,end_num):
@@ -106,7 +107,7 @@ def bgg_xml_reader():
         #print yearpublished
         elements = xml.iter('minplayers')
         minplayers = elements.next().text
-        
+
         elements = xml.iter('maxplayers')
         maxplayers = elements.next().text
 
@@ -133,7 +134,7 @@ def bgg_xml_reader():
         if name != None:
             name = name.replace('"','')
         #print name
-        
+
         boardgamemechanics = xml.iter('boardgamemechanic')
         for mechanic in boardgamemechanics:
             mechanics += mechanic.text + pipeline
@@ -249,7 +250,7 @@ def bgg_xml_reader():
         #print gameid
         column_str = left_par + 'gameid' + comma
         value_str = left_par + str(gameid) + comma
-        
+
         #print column_str
         #print value_str
         #print name
@@ -306,7 +307,7 @@ def bgg_xml_reader():
         else:
             column_str += 'language_dependence,'
             value_str += str(language_dependence)+','
-        
+
         var_dict['suggested_numplayers']=suggested_numplayers
         var_dict['mechanics']=mechanics
         var_dict['designers']=designers
@@ -315,7 +316,7 @@ def bgg_xml_reader():
         var_dict['familys']=familys
         var_dict['publishers']=publishers
         var_dict['expansions']=expansions
-        
+
         sql_gen_str('suggested_numplayers')
         sql_gen_str('mechanics')
         sql_gen_str('designers')
@@ -349,13 +350,13 @@ def bgg_xml_reader():
         else:
             value_str += ')'
 
-        #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)" 
+        #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         #print sql
-        
+
         try:
             cur.execute(sql)
             con.commit()

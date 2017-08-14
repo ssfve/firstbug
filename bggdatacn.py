@@ -23,23 +23,49 @@ import mysql.connector
 
 nameCN_dict = dict()
 
-nameCN_dict[148949] = u'伊斯坦布尔'
+nameCN_dict[42] = u'两河流域'
+
+nameCN_dict[521] = u'加拿大棋'
 nameCN_dict[811] = u'拉密'
-nameCN_dict[81453] = u'家族'
+nameCN_dict[822] = u'卡卡颂'
+
+nameCN_dict[1406] = u'大富翁'
+nameCN_dict[2453] = u'角斗士'
+
 nameCN_dict[8946] = u'达芬奇密码'
+nameCN_dict[8098] = u'图腾快手'
+nameCN_dict[9209] = u'车票之旅'
+
+
+nameCN_dict[65244] = u'禁闭岛'
+
+nameCN_dict[81453] = u'家族'
+nameCN_dict[85256] = u'时间线'
+nameCN_dict[98778] = u'花火'
+
+nameCN_dict[103343] = u'权力的游戏(第二版)'
+
+nameCN_dict[129622] = u'情书'
+
+nameCN_dict[136063] = u'禁闭沙漠'
 
 nameCN_dict[147949] = u'一夜终极狼人'
-nameCN_dict[167791] = u'火星开发计划'
-nameCN_dict[163412] = u'拼布艺术'
-nameCN_dict[822] = u'卡卡颂'
-nameCN_dict[209010] = u'约德尔战斗学院'
-nameCN_dict[521] = u'加拿大棋'
-nameCN_dict[209685] = u'香料之路'
 nameCN_dict[148228] = u'璀璨宝石'
+nameCN_dict[148949] = u'伊斯坦布尔'
+
 nameCN_dict[155821] = u'翠屿秘境'
-nameCN_dict[8098] = u'图腾快手'
-nameCN_dict[129622] = u'情书'
-nameCN_dict[2453] = u'角斗士'
+nameCN_dict[163412] = u'拼布艺术'
+nameCN_dict[167791] = u'火星开发计划'
+
+nameCN_dict[209010] = u'约德尔战斗学院'
+nameCN_dict[209685] = u'香料之路'
+
+
+nameCN_dict[215312] = u'小偷别跑'
+
+
+
+
 
 schema_name = 'boardgames'
 table_name = 'bggdata'
@@ -137,7 +163,7 @@ category_dict['Territory Building']='领土扩张'
 category_dict['Trains']='火车'
 category_dict['Transportation']='运输'
 category_dict['Travel']='旅行'
-category_dict['Trivia']='知识测赛'
+category_dict['Trivia']='冷知识'
 category_dict['Video Game Theme']='电游改编'
 category_dict['Vietnam War']='越南战争'
 category_dict['Wargame']='战棋'
