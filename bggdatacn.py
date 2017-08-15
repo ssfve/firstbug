@@ -69,8 +69,8 @@ schema_name = 'boardgames'
 table_name = 'bggdata'
 table_name_cn = 'bggdatacn'
 
-start_num = int(argv[1])
-end_num = start_num + int(argv[2])
+#start_num = int(argv[1])
+#end_num = start_num + int(argv[2])
 
 type_dict = dict()
 type_dict['Abstract Strategy Games (like Chess or Go)']='抽象'
@@ -255,7 +255,7 @@ def bgg_xml_reader():
     con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
 
-    for gameid in range(start_num,end_num):
+    for gameid in nameCN_dict.keys():
         try:
             sql = 'SELECT * FROM '+schema_name+'.'+table_name+' where gameid = '+str(gameid)
             print sql
