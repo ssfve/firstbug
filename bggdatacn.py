@@ -22,11 +22,14 @@ import mysql.connector
 #from mysql.connector import connection
 
 from gamelist import create_gamelist
-from categorylist import create_categorylist
+from categorylist import *
 
 
 nameCN_dict = create_gamelist()
+
+type_dict = create_typelist()
 category_dict = create_categorylist()
+mechanic_dict = create_mechaniclist()
 
 #print nameCN_dict
 schema_name = 'boardgames'
