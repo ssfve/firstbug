@@ -4,7 +4,7 @@ import os
 import io
 import requests
 import random
-from faker import Factory
+#from faker import Factory
 import threading
 import sys
 reload(sys)
@@ -47,6 +47,7 @@ nameCN_dict[103343] = u'权力的游戏(第二版)'
 
 nameCN_dict[129622] = u'情书'
 
+nameCN_dict[134352] = u'两室一弹'
 nameCN_dict[136063] = u'禁闭沙漠'
 
 nameCN_dict[147949] = u'一夜终极狼人'
@@ -64,9 +65,6 @@ nameCN_dict[209685] = u'香料之路'
 nameCN_dict[215312] = u'小偷别跑'
 
 
-
-
-
 schema_name = 'boardgames'
 table_name = 'bggdata'
 table_name_cn = 'bggdatacn'
@@ -74,17 +72,16 @@ table_name_cn = 'bggdatacn'
 start_num = int(argv[1])
 end_num = start_num + int(argv[2])
 
-type_dict = {
-    u'Abstract Strategy Games (like Chess or Go)':u'抽象',
-    u'Customizable Games (CCGs, CMGs, LCGs, etc)':u'集换/自组',
-    u'Thematic Games (emphasis on narrative)':u'美式剧情',
-    u'family':u'家庭游戏',
-    u'Children':u'儿童游戏',
-    u'Party Games (few rules, lots of laughs)':u'聚会游戏',
-    u'Strategy Games (more complex games)':u'德式策略',
-    u'Wargames (conflict simulation, etc.)':u'战棋',
-    u'None':u'无'
-}
+type_dict = dict()
+type_dict['Abstract Strategy Games (like Chess or Go)']='抽象'
+type_dict['Customizable Games (CCGs CMGs LCGs etc)']='集换/自组'
+type_dict['Thematic Games (emphasis on narrative)']='美式剧情'
+type_dict['family']='家庭游戏'
+type_dict['Children']='儿童游戏'
+type_dict['Party Games (few rules lots of laughs)']='聚会游戏'
+type_dict['Strategy Games (more complex games)']='德式策略'
+type_dict['Wargames (conflict simulation etc.)']='战棋'
+type_dict['None']='无'
 
 category_dict = dict()
 category_dict['Abstract Strategy']='抽象'
@@ -173,62 +170,59 @@ category_dict['World War II']='二战'
 category_dict['Zombies']='僵尸'
 category_dict['None']='无'
 
-mechanic_dict = {
-    u'Acting':u'表演',
-    u'Action / Movement Programming':u'行动编程',
-    u'Action Point Allowance System':u'行动点分配',
-    u'Area Control / Area Influence':u'区域控制',
-    u'Area Enclosure':u'区域断围',
-    u'Area Movement':u'区域移动',
-    u'Area-Impulse':u'区域脉冲',
-    u'Auction/Bidding':u'拍卖',
-    u'Betting/Wagering':u'押注',
-    u'Campaign / Battle Card Driven':u'卡驱',
-    u'Card Drafting':u'卡牌轮选',
-    u'Chit-Pull System':u'板块暗抽',
-    u'Co-operative Play':u'合作',
-    u'Commodity Speculation':u'货品估价',
-    u'Crayon Rail System':u'画线连接',
-    u'Deck / Pool Building':u'池库构筑(DBG)',
-    u'Dice Rolling':u'掷骰',
-    u'Grid Movement':u'区格移动',
-    u'Hand Management':u'手牌管理',
-    u'Hex-and-Counter':u'六边格+算子',
-    u'Line Drawing':u'画线图',
-    u'Memory':u'记忆',
-    u'Modular Board':u'模组版图',
-    u'Paper-and-Pencil':u'纸笔跑团',
-    u'Partnerships':u'阵营组队',
-    u'Pattern Building':u'创造图案',
-    u'Pattern Recognition':u'图案识别',
-    u'Pick-up and Deliver':u'取物递送',
-    u'Player Elimination':u'玩家淘汰',
-    u'Point to Point Movement':u'点对点移动',
-    u'Press Your Luck':u'拼人品',
-    u'Rock-Paper-Scissors':u'石头剪子布',
-    u'Role Playing':u'角色扮演',
-    u'Roll / Spin and Move':u'掷/转移动',
-    u'Route/Network Building':u'路网建设',
-    u'Secret Unit Deployment':u'秘密部署',
-    u'Set Collection':u'收集成套',
-    u'Simulation':u'模拟',
-    u'Simultaneous Action Selection':u'同时选择行动',
-    u'Singing':u'歌唱',
-    u'Stock Holding':u'股票投资',
-    u'Storytelling':u'编讲故事',
-    u'Take That':u'接招',
-    u'Tile Placement':u'板块拼置',
-    u'Time Track':u'时间轴',
-    u'Trading':u'交易',
-    u'Trick-taking':u'吃墩',
-    u'Variable Phase Order':u'可变流程',
-    u'Variable Player Powers':u'多样玩家能力',
-    u'Voting':u'投票',
-    u'Worker Placement':u'工人放置',
-    u'None':u'无'
-}
-
-
+mechanic_dict = dict()
+mechanic_dict['Acting']='表演'
+mechanic_dict['Action / Movement Programming']='行动编程'
+mechanic_dict['Action Point Allowance System']='行动点分配'
+mechanic_dict['Area Control / Area Influence']='区域控制'
+mechanic_dict['Area Enclosure']='区域断围'
+mechanic_dict['Area Movement']='区域移动'
+mechanic_dict['Area-Impulse']='区域脉冲'
+mechanic_dict['Auction/Bidding']='拍卖'
+mechanic_dict['Betting/Wagering']='押注'
+mechanic_dict['Campaign / Battle Card Driven']='卡驱'
+mechanic_dict['Card Drafting']='卡牌轮选'
+mechanic_dict['Chit-Pull System']='板块暗抽'
+mechanic_dict['Co-operative Play']='合作'
+mechanic_dict['Commodity Speculation']='货品估价'
+mechanic_dict['Crayon Rail System']='画线连接'
+mechanic_dict['Deck / Pool Building']='池库构筑(DBG)'
+mechanic_dict['Dice Rolling']='掷骰'
+mechanic_dict['Grid Movement']='区格移动'
+mechanic_dict['Hand Management']='手牌管理'
+mechanic_dict['Hex-and-Counter']='六边格+算子'
+mechanic_dict['Line Drawing']='画线图'
+mechanic_dict['Memory']='记忆'
+mechanic_dict['Modular Board']='模组版图'
+mechanic_dict['Paper-and-Pencil']='纸笔跑团'
+mechanic_dict['Partnerships']='阵营组队'
+mechanic_dict['Pattern Building']='创造图案'
+mechanic_dict['Pattern Recognition']='图案识别'
+mechanic_dict['Pick-up and Deliver']='取物递送'
+mechanic_dict['Player Elimination']='玩家淘汰'
+mechanic_dict['Point to Point Movement']='点对点移动'
+mechanic_dict['Press Your Luck']='拼人品'
+mechanic_dict['Rock-Paper-Scissors']='石头剪子布'
+mechanic_dict['Role Playing']='角色扮演'
+mechanic_dict['Roll / Spin and Move']='掷/转移动'
+mechanic_dict['Route/Network Building']='路网建设'
+mechanic_dict['Secret Unit Deployment']='秘密部署'
+mechanic_dict['Set Collection']='收集成套'
+mechanic_dict['Simulation']='模拟'
+mechanic_dict['Simultaneous Action Selection']='同时选择行动'
+mechanic_dict['Singing']='歌唱'
+mechanic_dict['Stock Holding']='股票投资'
+mechanic_dict['Storytelling']='编讲故事'
+mechanic_dict['Take That']='接招'
+mechanic_dict['Tile Placement']='板块拼置'
+mechanic_dict['Time Track']='时间轴'
+mechanic_dict['Trading']='交易'
+mechanic_dict['Trick-taking']='吃墩'
+mechanic_dict['Variable Phase Order']='可变流程'
+mechanic_dict['Variable Player Powers']='多样玩家能力'
+mechanic_dict['Voting']='投票'
+mechanic_dict['Worker Placement']='工人放置'
+mechanic_dict['None']='无'
 
 pipeline = '|'
 
@@ -257,7 +251,8 @@ def bgg_xml_reader():
     yearpublished = ''
     age = ''
     minplaytime = ''
-    con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
 
     for gameid in range(start_num,end_num):
