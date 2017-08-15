@@ -7,8 +7,8 @@ import random
 #from faker import Factory
 import threading
 import sys
-#reload(sys)
-#sys.setdefaultencoding('utf8')
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 from sys import argv
 
@@ -361,11 +361,11 @@ def bgg_xml_reader():
             cur.execute(sql)
             con.commit()
             print('SQL EXECUTION SUCCESS!')
-        except Exception as e:
+        except Exception,e:
             print('error when executing sql')
             print(sql)
             #print boardgamepublisher.encode('GBK', 'ignore')
-            raise e
+            print(e)
 
     cur.close()
     con.close()
