@@ -87,7 +87,7 @@ def bgg_xml_reader():
         rank_type = ''
 
         url = base_url.format(gameid)
-        print url
+        print(url)
         response = urllib2.urlopen(url)
         html = response.read()
 
@@ -98,7 +98,7 @@ def bgg_xml_reader():
         errors = xml.iter('error')
         for error in errors:
             error_flag = True
-            print str(gameid) + pipeline + error.get('message')
+            print(str(gameid) + pipeline + error.get('message'))
         if error_flag == True:
             continue
         # elements is a generator
@@ -360,12 +360,12 @@ def bgg_xml_reader():
         try:
             cur.execute(sql)
             con.commit()
-            print 'SQL EXECUTION SUCCESS!'
+            print('SQL EXECUTION SUCCESS!')
         except Exception,e:
-            print 'error when executing sql'
-            print sql
+            print('error when executing sql')
+            print(sql)
             #print boardgamepublisher.encode('GBK', 'ignore')
-            print e
+            print(e)
 
     cur.close()
     con.close()
