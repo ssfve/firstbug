@@ -20,12 +20,17 @@ except ImportError:
 import urllib2
 import mysql.connector
 #from mysql.connector import connection
+from gamelist import create_gamelist
+#from categorylist import *
+
+
+nameCN_dict = create_gamelist()
 
 schema_name = 'boardgames'
 table_name = 'bggdata'
 
-start_num = int(argv[1])
-end_num = start_num + int(argv[2])
+#start_num = int(argv[1])
+#end_num = start_num + int(argv[2])
 
 pipeline = '|'
 comma = ','
@@ -66,7 +71,9 @@ def bgg_xml_reader():
     con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
     global column_str, value_str, var_dict
-    for gameid in range(start_num,end_num):
+
+    #for gameid in range(start_num,end_num):
+    for gameid in nameCN_dict.keys():
         mechanics = ''
         categorys = ''
         publishers = ''
