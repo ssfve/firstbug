@@ -361,11 +361,11 @@ def bgg_xml_reader():
             cur.execute(sql)
             con.commit()
             print('SQL EXECUTION SUCCESS!')
-        except Exception,e:
+        except Exception as e:
             print('error when executing sql')
             print(sql)
             #print boardgamepublisher.encode('GBK', 'ignore')
-            print(e)
+            raise e
 
     cur.close()
     con.close()
