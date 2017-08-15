@@ -29,7 +29,10 @@ nameCN_dict = create_gamelist()
 schema_name = 'boardgames'
 table_name = 'bggdata'
 
-#start_num = int(argv[1])
+try:
+    environment = argv[1]
+Exception:
+    print 'usage: python bggapi.py local|remote'
 #end_num = start_num + int(argv[2])
 
 pipeline = '|'
@@ -67,8 +70,10 @@ def sql_gen_str(string):
 def bgg_xml_reader():
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+    if environment == 'local':
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    else if environment == 'remote':
+        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
     global column_str, value_str, var_dict
 

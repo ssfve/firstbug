@@ -23,13 +23,17 @@ import mysql.connector
 from gamelist import create_gamelist
 #from categorylist import *
 
-
 nameCN_dict = create_gamelist()
 
 schema_name = 'boardgames'
 table_name = 'bggdata'
 
-#start_num = int(argv[1])
+try:
+    gameid = int(argv[1])
+    environment = argv[2]
+except:
+    print 'usage: python one_bgg_api.py gameid local/remote'
+    sys.exit(0)
 #end_num = start_num + int(argv[2])
 
 pipeline = '|'
@@ -67,13 +71,20 @@ def sql_gen_str(string):
 def bgg_xml_reader():
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
-    global column_str, value_str, var_dict
 
+    if environment == 'local':
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    elif environment == 'remote':
+        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+    cur = con.cursor()
+    global column_str, value_str, var_dict, gameid
+
+    game_list = list()
+    game_list.append(gameid)
     #for gameid in range(start_num,end_num):
-    for gameid in nameCN_dict.keys():
+    for gameid in game_list:
         mechanics = ''
         categorys = ''
         publishers = ''

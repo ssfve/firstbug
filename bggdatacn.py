@@ -36,7 +36,10 @@ schema_name = 'boardgames'
 table_name = 'bggdata'
 table_name_cn = 'bggdatacn'
 
-#start_num = int(argv[1])
+try:
+    environment = argv[1]
+Exception:
+    print 'usage: python bggdatacn.py local|remote'
 #end_num = start_num + int(argv[2])
 
 #type_dict = dict()
@@ -71,8 +74,13 @@ def bgg_xml_reader():
     yearpublished = ''
     age = ''
     minplaytime = ''
+
+    if environment == 'local':
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    else if environment == 'remote':
+        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
 
     for gameid in nameCN_dict.keys():
