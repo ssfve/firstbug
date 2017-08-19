@@ -15,6 +15,7 @@ def create_gamelist():
     nameCN_dict[8098] = u'图腾快手'
     nameCN_dict[9209] = u'车票之旅'
 
+    nameCN_dict[46213] = u'传情画意'
     nameCN_dict[65244] = u'禁闭岛'
 
     nameCN_dict[81453] = u'家族'
