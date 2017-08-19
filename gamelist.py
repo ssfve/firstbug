@@ -29,7 +29,10 @@ def create_gamelist():
     nameCN_dict[147949] = u'一夜终极狼人'
     nameCN_dict[148228] = u'璀璨宝石'
     nameCN_dict[148949] = u'伊斯坦布尔'
+
+    nameCN_dict[150376] = u'死亡寒冬:生死抉择'
     nameCN_dict[155821] = u'翠屿秘境'
+
     nameCN_dict[163412] = u'拼布艺术'
     nameCN_dict[167791] = u'火星开发计划'
 

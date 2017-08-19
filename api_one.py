@@ -75,7 +75,7 @@ def bgg_xml_reader():
     if environment == 'local':
         con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     elif environment == 'remote':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
     #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
