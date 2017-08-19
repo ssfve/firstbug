@@ -29,13 +29,16 @@ try:
     #gameid = int(argv[1])
     environment = argv[1]
 except:
-    print 'usage: python index_gen.py local/remote'
+    print 'usage: python index_gen.py local/remote/linux'
     sys.exit(0)
 
 if environment == 'local':
     con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
 elif environment == 'remote':
     con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+elif environment == 'linux':
+    con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+
 cur = con.cursor()
 
 def getnameEN(gameid):
