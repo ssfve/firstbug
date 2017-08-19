@@ -42,7 +42,7 @@ try:
     gameid = int(argv[1])
     environment = argv[2]
 except:
-    print 'usage: python translate_db_one.py gameid local/remote'
+    print 'usage: python translate_db_one.py gameid local/remote/linux'
     sys.exit(0)
 #type_dict = dict()
 
@@ -81,6 +81,8 @@ def bgg_xml_reader():
         con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     elif environment == 'remote':
         con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+    elif environment == 'linux':
+        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
