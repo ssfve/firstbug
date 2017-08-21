@@ -297,6 +297,9 @@ def bgg_xml_reader():
         for mechanic in mechanics:
             mechanism_str += mechanic_dict[mechanic] + pipeline
         for designer in designers:
+            #print designer
+            #print designer_dict[designer]
+            #print designer_dict['Chu-Lan Kao']
             designer_str += designer_dict[designer] + pipeline
         for category in categorys:
             #print category
@@ -325,7 +328,7 @@ def bgg_xml_reader():
             column_str += ''
         else:
             column_str += 'designersCN,'
-            value_str += '"'+str(designersCN)+'",'
+            value_str += '"'+str(designer_str)+'",'
 
         if artistsCN == '':
             column_str += ''
