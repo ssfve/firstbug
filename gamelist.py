@@ -2,6 +2,7 @@
 
 def create_gamelist():
     nameCN_dict = dict()
+    nameCN_dict[13] = u'卡坦岛'
     nameCN_dict[42] = u'两河流域'
 
     nameCN_dict[521] = u'加拿大棋'
@@ -29,6 +30,7 @@ def create_gamelist():
     nameCN_dict[134352] = u'两室一弹'
     nameCN_dict[136063] = u'禁闭沙漠'
     nameCN_dict[147949] = u'一夜终极狼人'
+
     nameCN_dict[148228] = u'璀璨宝石'
     nameCN_dict[148949] = u'伊斯坦布尔'
 
@@ -43,5 +45,6 @@ def create_gamelist():
     nameCN_dict[197944] = u'蟹霸王'
     nameCN_dict[209010] = u'约德尔战斗学院'
     nameCN_dict[209685] = u'香料之路'
+
     nameCN_dict[215312] = u'小偷别跑'
     return nameCN_dict

@@ -35,8 +35,8 @@ try:
     color = argv[2]
     environment = argv[3]
 except:
-    print 'usage: python one_bgg_api.py gameid color windows/remote/linux\n'
-    print 'choose between windows remote and linux\n'
+    print 'usage: python one_bgg_api.py gameid color local/remote/linux\n'
+    print 'choose between local remote and linux\n'
     print 'color could be '
     print color_dict.keys()
     sys.exit(0)
@@ -85,7 +85,7 @@ def bgg_xml_reader():
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
 
-    if environment == 'windows':
+    if environment == 'local':
         con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     elif environment == 'remote':
         con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
