@@ -29,6 +29,8 @@ def create_gamelist():
     nameCN_dict[129622] = u'情书'
     nameCN_dict[134352] = u'两室一弹'
     nameCN_dict[136063] = u'禁闭沙漠'
+
+    nameCN_dict[146916] = u'快乐感恩节'
     nameCN_dict[147949] = u'一夜终极狼人'
 
     nameCN_dict[148228] = u'璀璨宝石'
