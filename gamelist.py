@@ -5,6 +5,7 @@ def create_gamelist():
     nameCN_dict[13] = u'卡坦岛'
     nameCN_dict[42] = u'两河流域'
 
+    nameCN_dict[220] = u'现代艺术'
     nameCN_dict[521] = u'加拿大棋'
     nameCN_dict[811] = u'拉密'
     nameCN_dict[822] = u'卡卡颂'
