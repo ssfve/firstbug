@@ -27,6 +27,11 @@ from categorylist import *
 
 nameCN_dict = create_gamelist()
 
+designer_dict = dict()
+designer_dict[''] = u'倪瑞南'
+designer_dict['Chu-Lan Kao'] = u'高竹岚'
+
+
 type_dict = create_typelist()
 category_dict = create_categorylist()
 mechanic_dict = create_mechaniclist()
@@ -284,12 +289,15 @@ def bgg_xml_reader():
         type_str = ''
 
         mechanics = mechanicsCN.rstrip('|').split('|')
+        designers = designersCN.rstrip('|').split('|')
         categorys = categorysCN.rstrip('|').split(pipeline)
         #print mechanics
         #print mechanic_dict['Area Control / Area Influence']
         type_str += type_dict[typeCN] + pipeline
         for mechanic in mechanics:
             mechanism_str += mechanic_dict[mechanic] + pipeline
+        for designer in designers:
+            designer_str += designer_dict[designer] + pipeline
         for category in categorys:
             #print category
             category_str += category_dict[category] + pipeline
