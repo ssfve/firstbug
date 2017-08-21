@@ -43,6 +43,7 @@ def create_gamelist():
     nameCN_dict[163412] = u'拼布艺术'
     nameCN_dict[167791] = u'火星开发计划'
 
+    nameCN_dict[171131] = u'深海谍影'
     nameCN_dict[177590] = u'危情13日:古巴导弹危机'
 
     nameCN_dict[197944] = u'蟹霸王'
