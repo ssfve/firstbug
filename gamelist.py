@@ -49,6 +49,9 @@ def create_gamelist():
 
     nameCN_dict[197944] = u'蟹霸王'
     nameCN_dict[209010] = u'约德尔战斗学院'
+
+
+    nameCN_dict[205059] = u'疯狂诡宅(第二版)'
     nameCN_dict[209685] = u'香料之路'
 
     nameCN_dict[215312] = u'小偷别跑'
