@@ -27,6 +27,7 @@ def create_gamelist():
 
     nameCN_dict[103343] = u'权力的游戏(第二版)'
 
+    nameCN_dict[128882] = u'阿瓦隆'
     nameCN_dict[129622] = u'情书'
     nameCN_dict[134352] = u'两室一弹'
     nameCN_dict[136063] = u'禁闭沙漠'
