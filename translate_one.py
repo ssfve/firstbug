@@ -30,7 +30,7 @@ nameCN_dict = create_gamelist()
 designer_dict = dict()
 designer_dict['Reiner Knizia'] = u'倪睿南'
 designer_dict['Chu-Lan Kao'] = u'高竹岚'
-
+designer_dict['Uwe Rosenberg'] = u'乌老师'
 
 type_dict = create_typelist()
 category_dict = create_categorylist()
