@@ -27,6 +27,7 @@ def create_gamelist():
     nameCN_dict[85256] = u'时间线'
     nameCN_dict[98778] = u'花火'
 
+    nameCN_dict[102794] = u'洞穴农夫'
     nameCN_dict[103343] = u'权力的游戏(第二版)'
 
     nameCN_dict[128882] = u'阿瓦隆'
