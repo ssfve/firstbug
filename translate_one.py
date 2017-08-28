@@ -43,6 +43,7 @@ table_name_cn = 'bggdatacn'
 
 #start_num = int(argv[1])
 #end_num = start_num + int(argv[2])
+"""
 try:
     gameid = int(argv[1])
     environment = argv[2]
@@ -50,13 +51,13 @@ except:
     print 'usage: python translate_db_one.py gameid local/remote/linux'
     sys.exit(0)
 #type_dict = dict()
-
+"""
 #mechanic_dict = dict()
 import categorylist
 
 pipeline = '|'
 
-def bgg_xml_reader():
+def bgg_xml_translater(games_dict):
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     #base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
 
@@ -82,24 +83,17 @@ def bgg_xml_reader():
     age = ''
     minplaytime = ''
 
-    if environment == 'local':
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    elif environment == 'remote':
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-    elif environment == 'linux':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
+    #global gameid
 
-    global gameid
+    #game_list = list()
+    #game_list.append(gameid)
 
-    game_list = list()
-    game_list.append(gameid)
-    for gameid in game_list:
+    for gameid in games_dict:
         try:
             sql = 'SELECT * FROM '+schema_name+'.'+table_name+' where gameid = '+str(gameid)
             print sql
+            con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+            cur = con.cursor()
             cur.execute(sql)
             records = cur.fetchall()
             data = list(records[0])
@@ -124,8 +118,8 @@ def bgg_xml_reader():
 
             suggested_numplayers = str(data[17])
             #nameCN = str(data[18])
-            if nameCN_dict.has_key(gameid):
-                nameCN = str(nameCN_dict[gameid])
+            if games_dict.has_key(gameid):
+                nameCN = str(games_dict[gameid][0])
                 #print nameCN
             else:
                 nameCN = str(data[18])
@@ -390,15 +384,30 @@ def bgg_xml_reader():
         try:
             cur.execute(sql)
             con.commit()
-            print 'SQL EXECUTION SUCCESS!'
+            print('WINDOWS SQL EXECUTION SUCCESS!')
         except Exception,e:
             print 'error when executing sql 2'
             print sql
             #print boardgamepublisher.encode('GBK', 'ignore')
             print e
 
-    cur.close()
-    con.close()
+        cur.close()
+        con.close()
 
+        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+        cur = con.cursor()
+        try:
+            cur.execute(sql)
+            con.commit()
+            print('LINUX SQL EXECUTION SUCCESS!')
+        except Exception,e:
+            print 'error when executing sql 2'
+            print sql
+            #print boardgamepublisher.encode('GBK', 'ignore')
+            print e
+        cur.close()
+        con.close()
+"""
 if __name__ == '__main__':
-    bgg_xml_reader()
+    bgg_xml_translater()
+"""

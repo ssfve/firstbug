@@ -24,10 +24,19 @@ Exception:
 schema_name = 'boardgames'
 table_name_en = 'bggdata'
 table_name_cn = 'bggdatacn'
+#img_home = os.getenv('IMG_HOME')
+
+boardgame_home = os.getenv('BG_HOME')
+pageGenerator_home = os.getenv('PG_HOME')
+img_home = os.getenv('IMG_HOME')
+print boardgame_home
+
+slash = '/'
+image = 'img'
 
 try:
     #gameid = int(argv[1])
-    environment = argv[1]
+    environment = 'local'
 except:
     print 'usage: python index_gen.py local/remote/linux'
     sys.exit(0)
@@ -198,6 +207,21 @@ for gameid in nameCN_dict.keys():
     index_dict[capital_key]=[gameid,nameEN,nameCN,capital_key]
     print index_dict[capital_key]
 
+    imgfolder = boardgame_home + slash + image + slash + str(gameid)
+    imgfolder_1 = boardgame_home + slash + image + slash + str(gameid) + slash + 'setup'
+    imgfolder_2 = boardgame_home + slash + image + slash + str(gameid) + slash + 'flow'
+    imgfolder_3 = boardgame_home + slash + image + slash + str(gameid) + slash + 'end'
+    imgfolder_4 = boardgame_home + slash + image + slash + str(gameid) + slash + 'stuff'
+    if not os.path.exists(imgfolder):
+        os.mkdir(imgfolder)
+    if not os.path.exists(imgfolder_1):
+        os.mkdir(imgfolder_1)
+    if not os.path.exists(imgfolder_2):
+        os.mkdir(imgfolder_2)
+    if not os.path.exists(imgfolder_3):
+        os.mkdir(imgfolder_3)
+    if not os.path.exists(imgfolder_4):
+        os.mkdir(imgfolder_4)
 
 #print index_dict
 
@@ -226,6 +250,7 @@ for i, key in enumerate(sorted(index_dict.keys())):
     elif len(gameinfo) == 4:
         f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1]+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
 f.close()
+
 
 print "SUCCESS!"
 

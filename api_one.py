@@ -28,6 +28,7 @@ nameCN_dict = create_gamelist()
 schema_name = 'boardgames'
 table_name = 'bggdata'
 
+"""
 try:
     gameid = int(argv[1])
     environment = argv[2]
@@ -35,6 +36,7 @@ except:
     print 'usage: python one_bgg_api.py gameid local/remote/linux'
     sys.exit(0)
 #end_num = start_num + int(argv[2])
+"""
 
 pipeline = '|'
 comma = ','
@@ -68,25 +70,16 @@ def sql_gen_str(string):
         value_str += quote + str(var_dict[string]) + quote + comma
 
 
-def bgg_xml_reader():
+def bgg_xml_reader(games_dict):
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
 
-    if environment == 'local':
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    elif environment == 'remote':
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-    elif environment == 'linux':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
-    global column_str, value_str, var_dict, gameid
+    global column_str, value_str, var_dict
 
-    game_list = list()
-    game_list.append(gameid)
+    #game_list = list()
+    #game_list.append(gameid)
     #for gameid in range(start_num,end_num):
-    for gameid in game_list:
+    for gameid in games_dict:
         mechanics = ''
         categorys = ''
         publishers = ''
@@ -377,18 +370,39 @@ def bgg_xml_reader():
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         #print sql
 
+        #if environment == 'linux':
+        #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+        #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        cur = con.cursor()
         try:
             cur.execute(sql)
             con.commit()
-            print('SQL EXECUTION SUCCESS!')
+            print('WINDOWS SQL EXECUTION SUCCESS!')
         except Exception,e:
             print('error when executing sql')
             print(sql)
             #print boardgamepublisher.encode('GBK', 'ignore')
             print(e)
+        cur.close()
+        con.close()
 
-    cur.close()
-    con.close()
+        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+        cur = con.cursor()
+        try:
+            cur.execute(sql)
+            con.commit()
+            print('LINUX SQL EXECUTION SUCCESS!')
+        except Exception,e:
+            print('error when executing sql')
+            print(sql)
+            #print boardgamepublisher.encode('GBK', 'ignore')
+            print(e)
+        cur.close()
+        con.close()
 
+"""
 if __name__ == '__main__':
     bgg_xml_reader()
+"""

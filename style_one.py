@@ -30,6 +30,7 @@ color_dict = create_colorlist()
 schema_name = 'boardgames'
 table_name = 'style_table'
 
+"""
 try:
     gameid = int(argv[1])
     color = argv[2]
@@ -41,10 +42,9 @@ except:
     print color_dict.keys()
     sys.exit(0)
 #end_num = start_num + int(argv[2])
+"""
 
 
-theme_color = color_dict[color][0]
-content_color = color_dict[color][1]
 default_color = '#999999';
 bg_color = '#F4F4F4';
 
@@ -81,25 +81,20 @@ def sql_gen_str(string):
         value_str += quote + str(var_dict[string]) + quote + comma
 
 
-def bgg_xml_reader():
+def bgg_xml_styler(games_dict):
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
-
-    if environment == 'local':
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    elif environment == 'remote':
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-    elif environment == 'linux':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+    global column_str, value_str, var_dict
+    #game_list = list()
+    con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
     cur = con.cursor()
-    global column_str, value_str, var_dict, gameid
 
-    game_list = list()
-    game_list.append(gameid)
-    #for gameid in range(start_num,end_num):
-    for gameid in game_list:
+    for gameid in games_dict:
+        color = games_dict[gameid][1]
+        theme_color = color_dict[color][0]
+        content_color = color_dict[color][1]
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
@@ -108,10 +103,27 @@ def bgg_xml_reader():
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         print sql
 
+        """
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        cur = con.cursor()
         try:
             cur.execute(sql)
             con.commit()
-            print('SQL EXECUTION SUCCESS!')
+            print('WINDOWS SQL EXECUTION SUCCESS!')
+        except Exception,e:
+            print('error when executing sql')
+            print(sql)
+            #print boardgamepublisher.encode('GBK', 'ignore')
+            print(e)
+
+        cur.close()
+        con.close()
+        """
+
+        try:
+            cur.execute(sql)
+            con.commit()
+            print('LINUX SQL EXECUTION SUCCESS!')
         except Exception,e:
             print('error when executing sql')
             print(sql)
@@ -121,5 +133,7 @@ def bgg_xml_reader():
     cur.close()
     con.close()
 
+"""
 if __name__ == '__main__':
-    bgg_xml_reader()
+    bgg_xml_styler(games_dict)
+"""

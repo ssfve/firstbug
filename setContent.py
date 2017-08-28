@@ -23,6 +23,8 @@ import mysql.connector
 from gamelist import create_gamelist
 from palette import create_colorlist
 #from categorylist import *
+from img_one import bgg_xml_image
+from img_one import bgg_xml_text
 
 nameCN_dict = create_gamelist()
 color_dict = create_colorlist()
@@ -33,15 +35,17 @@ table_name = 'control_table'
 try:
     gameid = int(argv[1])
     pageType = argv[2]
-    location = argv[3]
+    lineNum = argv[3]
+    #location = argv[4]
     flag = argv[4]
-    environment = argv[5]
+    location = 0
 except:
-    print 'usage: python one_bgg_api.py gameid pageType location flag windows/remote/linux\n'
-    print 'pageType could be setup flow end\n'
-    print 'location could be 1 2 3 4 5 6 7 8 9 10\n'
-    print 'flag could be true or flase\n'
-    print 'choose between windows remote and linux\n'
+    print 'usage: python setContent.py gameid pageType lineNum flag\n'
+    print 'pageType could be setup flow end stuff\n'
+    print 'lineNum could be 1 2 3 4 5 6 7 8 9 10\n'
+    print 'flag could be img or txt\n'
+    #print 'location could be [1] 2 3 4 5 6 7 8 9 10\n'
+    #print 'choose between windows [remote] and linux\n'
     #print color_dict.keys()
     sys.exit(0)
 #end_num = start_num + int(argv[2])
@@ -51,7 +55,7 @@ except:
 #content_color = color_dict[color][1]
 #default_color = '#999999';
 #bg_color = '#F4F4F4';
-segmentID = str(gameid)+'_'+pageType+'_'+location
+segmentID = str(gameid)+'_'+pageType+'_'+str(lineNum)+'_'+flag
 
 pipeline = '|'
 comma = ','
@@ -85,20 +89,14 @@ def sql_gen_str(string):
         value_str += quote + str(var_dict[string]) + quote + comma
 
 
-def bgg_xml_reader():
+def bgg_xml_control(gameid):
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
 
-    if environment == 'windows':
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    elif environment == 'remote':
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-    elif environment == 'linux':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
     #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
-    global column_str, value_str, var_dict, gameid
+
+    global column_str, value_str, var_dict
 
     game_list = list()
     game_list.append(gameid)
@@ -107,23 +105,51 @@ def bgg_xml_reader():
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
-        column_str = '(segmentID,gameid,pageType,location,flag)'
-        value_str = str((segmentID,gameid,pageType,location,flag))
+        column_str = '(segmentID,gameid,pageType,location,flag,lineNum)'
+        value_str = str((segmentID,gameid,pageType,location,flag,lineNum))
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         print sql
 
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        cur = con.cursor()
         try:
             cur.execute(sql)
             con.commit()
-            print('SQL EXECUTION SUCCESS!')
+            print('WINDOWS SQL EXECUTION SUCCESS!')
         except Exception,e:
             print('error when executing sql')
             print(sql)
             #print boardgamepublisher.encode('GBK', 'ignore')
             print(e)
 
-    cur.close()
-    con.close()
+        cur.close()
+        con.close()
+
+        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+        cur = con.cursor()
+        try:
+            cur.execute(sql)
+            con.commit()
+            print('LINUX SQL EXECUTION SUCCESS!')
+        except Exception,e:
+            print('error when executing sql')
+            print(sql)
+            #print boardgamepublisher.encode('GBK', 'ignore')
+            print(e)
+
+        cur.close()
+        con.close()
+
 
 if __name__ == '__main__':
-    bgg_xml_reader()
+    bgg_xml_control(gameid)
+    if flag == 'img':
+        location = 0
+        bgg_xml_text(gameid,lineNum,pageType,location)
+        location = 1
+        bgg_xml_image(gameid,lineNum,pageType,location)
+        location = 2
+        bgg_xml_image(gameid,lineNum,pageType,location)
+    if flag == 'txt':
+        location = 0
+        bgg_xml_text(gameid,lineNum,pageType,location)
