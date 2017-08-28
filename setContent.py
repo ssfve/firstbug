@@ -31,19 +31,25 @@ color_dict = create_colorlist()
 
 schema_name = 'boardgames'
 table_name = 'control_table'
+NumPages = 1
 
 try:
     gameid = int(argv[1])
     pageType = argv[2]
-    lineNum = argv[3]
     #location = argv[4]
-    flag = argv[4]
+    flag = argv[3]
+    if flag == 'img':
+        NumPages = argv[4]
+        lineNum = argv[5]
+    else:
+        lineNum = argv[4]
     location = 0
 except:
     print 'usage: python setContent.py gameid pageType lineNum flag\n'
     print 'pageType could be setup flow end stuff\n'
-    print 'lineNum could be 1 2 3 4 5 6 7 8 9 10\n'
     print 'flag could be img or txt\n'
+    print 'If flag is img please input number of pics\n'
+    print 'lineNum could be 1 2 3 4 5 6 7 8 9 10\n'
     #print 'location could be [1] 2 3 4 5 6 7 8 9 10\n'
     #print 'choose between windows [remote] and linux\n'
     #print color_dict.keys()
@@ -142,14 +148,16 @@ def bgg_xml_control(gameid):
 
 
 if __name__ == '__main__':
+    #if flag == 'ctrl':
     bgg_xml_control(gameid)
     if flag == 'img':
         location = 0
         bgg_xml_text(gameid,lineNum,pageType,location)
-        location = 1
-        bgg_xml_image(gameid,lineNum,pageType,location)
-        location = 2
-        bgg_xml_image(gameid,lineNum,pageType,location)
+
+        #bgg_xml_image(gameid,lineNum,pageType,location)
+        for location in range(1,1+int(NumPages)):
+        #location = 2
+            bgg_xml_image(gameid,lineNum,pageType,location)
     if flag == 'txt':
         location = 0
         bgg_xml_text(gameid,lineNum,pageType,location)
