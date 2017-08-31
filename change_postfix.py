@@ -12,11 +12,10 @@ slash = '/'
 
 try:
     gameid = argv[1]
-    from_postfix = argv[2]
-    to_postfix = argv[3]
+    from_postfix = 'JPG'
+    to_postfix = 'jpg'
 except:
-    print "usage: python change_postfix.py gameid from_type to_type"
-    print "example: python change_postfix.py JPG jpg\n"
+    print "usage: python change_postfix.py gameid"
     sys.exit(0)
 
 #change name
@@ -24,6 +23,7 @@ setup_dir = img_home + slash + gameid + slash + 'setup'
 flow_dir = img_home + slash + gameid + slash + 'flow'
 end_dir = img_home + slash + gameid + slash + 'end'
 stuff_dir = img_home + slash + gameid + slash + 'stuff'
+home_dir = img_home + slash + gameid
 
 print setup_dir
 
@@ -32,7 +32,7 @@ dir_list.append(setup_dir)
 dir_list.append(flow_dir)
 dir_list.append(end_dir)
 dir_list.append(stuff_dir)
-
+dir_list.append(home_dir)
 
 for directory in dir_list:
     os.chdir(directory)

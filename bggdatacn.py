@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import locale
 import io
 import requests
 import random
@@ -36,14 +37,25 @@ schema_name = 'boardgames'
 table_name = 'bggdata'
 table_name_cn = 'bggdatacn'
 
+"""
 try:
     environment = argv[1]
 Exception:
     print 'usage: python bggdatacn.py local|remote'
+"""
+try:
+    gameid = argv[1]
+    if gameid[0:2] != '99':
+        print 'gameid should start with 99, example 991234'
+        sys.exit(0)
+except:
+    print 'usage: python bggdatacn.py gameid'
+    sys.exit(0)
 #end_num = start_num + int(argv[2])
 
 #type_dict = dict()
-
+game_list = list()
+game_list.append(gameid)
 #mechanic_dict = dict()
 import categorylist
 
@@ -75,71 +87,20 @@ def bgg_xml_reader():
     age = ''
     minplaytime = ''
 
-    if environment == 'local':
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    else if environment == 'remote':
-        con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
-
-    for gameid in nameCN_dict.keys():
-        try:
-            sql = 'SELECT * FROM '+schema_name+'.'+table_name+' where gameid = '+str(gameid)
-            print sql
-            cur.execute(sql)
-            records = cur.fetchall()
-            data = list(records[0])
-            #print data
-            yearpublished = str(data[1])
-            age = str(data[2])
-            suggested_playerage = str(data[3])
-            usersrated = str(data[4])
-            rank_subtype = str(data[5])
-            rank_type = str(data[6])
-            numweights = str(data[7])
-            minplayers = str(data[8])
-            maxplayers = str(data[9])
-            minplaytime = str(data[10])
-            maxplaytime = str(data[11])
-            language_dependence = str(data[12])
-
-            average = data[13]
-            bayesaverage_subtype = data[14]
-            bayesaverage_type = data[15]
-            averageweight = data[16]
-
-            suggested_numplayers = str(data[17])
-            #nameCN = str(data[18])
-            if nameCN_dict.has_key(gameid):
-                nameCN = str(nameCN_dict[gameid])
-                #print nameCN
-            else:
-                nameCN = str(data[18])
-            expansionsCN = str(data[19])
-            typeCN = str(data[20])
-            categorysCN = str(data[21])
-            mechanicsCN = str(data[22])
-            familysCN = str(data[23])
-            subdomainCN = str(data[24])
-            designersCN = str(data[25])
-            artistsCN = str(data[26])
-            publishersCN = str(data[27])
-
-        except Exception,e:
-            print 'error while executing sql 1'
-            print sql
-            print e
-            continue
-
+    for gameid in game_list:
         column_str = '('
         value_str = '('
 
         #print gameid
         column_str += 'gameid,'
+
+        print 'please input each column press enter is no value at that column'
+        #gameid = input("game id = ")
+        print ('gameid = ' + gameid)
         value_str += str(gameid)+','
 
         #print nameCN
+        nameCN = raw_input("nameCN = ").decode(sys.stdin.encoding or locale.getpreferredencoding(True))
         if nameCN == '' or nameCN == 'None':
             column_str += ''
         else:
@@ -147,82 +108,84 @@ def bgg_xml_reader():
             value_str += '"'+str(nameCN)+'",'
 
         #print yearpublished
+        yearpublished = input("yearpublished = ")
         if yearpublished == '' or yearpublished == 'None':
             column_str += ''
         else:
             column_str += 'yearpublished,'
             value_str += str(yearpublished)+','
         #print column_str
-        #print age
+        age = input("age = ")
         if age == '' or age == 'None':
             column_str += ''
         else:
             column_str += 'age,'
             value_str += str(age)+','
 
-        #print minplaytime
+        minplaytime = input("minplaytime = ")
         if minplaytime == '' or minplaytime == 'None':
             column_str += ''
         else:
             column_str += 'minplaytime,'
             value_str += str(minplaytime)+','
 
-        #print maxplaytime
+        maxplaytime = input("maxplaytime = ")
         if maxplaytime == '' or maxplaytime == 'None':
             column_str += ''
         else:
             column_str += 'maxplaytime,'
             value_str += str(maxplaytime)+','
 
-        #print minplayers
+        minplayers = input("minplayers = ")
         if minplayers == '' or minplayers == 'None':
             column_str += ''
         else:
             column_str += 'minplayers,'
             value_str += str(minplayers)+','
 
-        #print maxplayers
+        maxplayers = input("maxplayers = ")
         if maxplayers == '' or maxplayers == 'None':
             column_str += ''
         else:
             column_str += 'maxplayers,'
             value_str += str(maxplayers)+','
 
+        suggested_playerage = input("suggested_playerage = ")
         if suggested_playerage == '' or suggested_playerage == 'None':
             column_str += ''
         else:
             column_str += 'suggested_playerage,'
             value_str += str(suggested_playerage)+','
 
-        #print averageweight
+        average = input("average = ")
         if average == '' or average =='None' or average == None:
             column_str += ''
         else:
             column_str += 'average,'
             value_str += str(average)+','
 
-        #print averageweight
+        averageweight = input("averageweight = ")
         if averageweight == '' or averageweight =='None' or averageweight == None:
             column_str += ''
         else:
             column_str += 'averageweight,'
             value_str += str(averageweight)+','
 
-        #print averageweight
+        numweights = input("numweights = ")
         if numweights == '' or numweights =='None'  or numweights == None:
             column_str += ''
         else:
             column_str += 'numweights,'
             value_str += str(numweights)+','
 
-        #print usersrated
+        usersrated = input("usersrated = ")
         if usersrated == '' or usersrated =='None'  or usersrated == None:
             column_str += ''
         else:
             column_str += 'usersrated,'
             value_str += str(usersrated)+','
 
-        #print rank_subtype
+        rank_subtype = input("rank_subtype = ")
         if rank_subtype == '' or rank_subtype == 'None' or rank_subtype == None:
             #print 'hello'
             column_str += ''
@@ -230,14 +193,14 @@ def bgg_xml_reader():
             column_str += 'rank_subtype,'
             value_str += str(rank_subtype)+','
 
-        #print rank_subtype
+        rank_type = input("rank_type = ")
         if rank_type == '' or rank_type == 'None' or rank_type == None:
             column_str += ''
         else:
             column_str += 'rank_type,'
             value_str += str(rank_type)+','
 
-        #print rank_subtype
+        bayesaverage_subtype = input("bayesaverage_subtype = ")
         if bayesaverage_subtype == '' or bayesaverage_subtype == 'None'  or bayesaverage_subtype == None:
             column_str += ''
         else:
@@ -245,7 +208,7 @@ def bgg_xml_reader():
             value_str += str(bayesaverage_subtype)+','
 
         #print bayesaverage_type
-        #print type(bayesaverage_type)
+        bayesaverage_type = input("bayesaverage_type = ")
         if bayesaverage_type == '' or bayesaverage_type == None or bayesaverage_type == 'None':
             column_str += ''
         else:
@@ -253,14 +216,14 @@ def bgg_xml_reader():
             value_str += str(bayesaverage_type)+','
 
         #print language_dependence
-        #print type(language_dependence)
+        language_dependence = input("language_dependence = ")
         if language_dependence == '' or language_dependence == None or language_dependence == 'None':
             column_str += ''
         else:
             column_str += 'language_dependence,'
             value_str += str(language_dependence)+','
 
-        #print suggested_numplayers
+        suggested_numplayers = input("suggested_numplayers = ")
         if suggested_numplayers == '':
             column_str += ''
         else:
@@ -275,6 +238,7 @@ def bgg_xml_reader():
         publisher_str = ''
         type_str = ''
 
+        """
         mechanics = mechanicsCN.rstrip('|').split('|')
         categorys = categorysCN.rstrip('|').split(pipeline)
         #print mechanics
@@ -286,6 +250,7 @@ def bgg_xml_reader():
             #print category
             category_str += category_dict[category] + pipeline
         """
+        """
         for designer in designers:
             designer_str += designer.text.replace('"','')+'|'
         for artist in artists:
@@ -293,61 +258,73 @@ def bgg_xml_reader():
         for publisher in publishers:
             publisher_str += publisher.text.encode("utf-8")+'|'
         """
+        print 'mechanisms should be separate with | and end with |'
+        mechanism_str = raw_input("mechanism_str = ").decode(sys.stdin.encoding or locale.getpreferredencoding(True))
         if mechanism_str == '':
             column_str += ''
         else:
             column_str += 'mechanicsCN,'
             value_str += '"'+str(mechanism_str)+'",'
 
+        type_str = input("type_str = ")
         if type_str == '':
             column_str += ''
         else:
             column_str += 'typeCN,'
             value_str += '"'+str(type_str)+'",'
 
-        if designersCN == '':
+
+        designersCN = raw_input("designersCN = ").decode(sys.stdin.encoding or locale.getpreferredencoding(True))
+        if designersCN == '' or designersCN == 'None':
             column_str += ''
         else:
             column_str += 'designersCN,'
             value_str += '"'+str(designersCN)+'",'
 
-        if artistsCN == '':
+        artistsCN = input("artistsCN = ")
+        if artistsCN == '' or artistsCN == 'None':
             column_str += ''
         else:
             column_str += 'artistsCN,'
             value_str += '"'+str(artistsCN)+'",'
 
+        print 'categorys should be separate with | and end with |'
+        category_str = raw_input("category_str = ").decode(sys.stdin.encoding or locale.getpreferredencoding(True))
         if category_str == '':
             column_str += ''
         else:
             column_str += 'categorysCN,'
             value_str += '"'+str(category_str)+'",'
 
+        familysCN = input("familysCN = ")
         if familysCN == '':
             column_str += ''
         else:
             column_str += 'familysCN,'
             value_str += '"'+str(familysCN)+'",'
 
+        publishersCN = raw_input("publishersCN = ").decode(sys.stdin.encoding or locale.getpreferredencoding(True))
         if publishersCN == '':
             column_str += ''
         else:
             column_str += 'publishersCN,'
             value_str += '"'+str(publishersCN)+'",'
 
+        expansionsCN = input("expansionsCN = ")
         if expansionsCN == '':
             column_str += ''
         else:
             column_str += 'expansionsCN,'
             value_str += '"'+str(expansionsCN)+'",'
 
+        subdomainCN = input("subdomainCN = ")
         if subdomainCN == '':
             column_str += ''
         else:
             column_str += 'subdomainCN,'
             value_str += '"'+str(subdomainCN)+'",'
 
-
+        #subdomainCN = input("subdomainCN = ")
         if column_str[-1] == ',':
             column_str = column_str[:-1]+')'
         else:
@@ -359,7 +336,10 @@ def bgg_xml_reader():
             value_str += ')'
 
 
-
+    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+        cur = con.cursor()
 
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
@@ -378,8 +358,24 @@ def bgg_xml_reader():
             #print boardgamepublisher.encode('GBK', 'ignore')
             print e
 
-    cur.close()
-    con.close()
+        cur.close()
+        con.close()
+
+        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
+        cur = con.cursor()
+
+        try:
+            cur.execute(sql)
+            con.commit()
+            print 'SQL EXECUTION SUCCESS!'
+        except Exception,e:
+            print 'error when executing sql 2'
+            print sql
+            #print boardgamepublisher.encode('GBK', 'ignore')
+            print e
+
+        cur.close()
+        con.close()
 
 if __name__ == '__main__':
     bgg_xml_reader()

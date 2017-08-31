@@ -17,6 +17,7 @@ def create_gamelist():
     nameCN_dict[8098] = (u'图腾快手','orange')
     nameCN_dict[9209] = (u'车票之旅','blue')
 
+    nameCN_dict[15817] = (u'马尼拉','green')
     nameCN_dict[15987] = (u'魔镇惊魂','green')
 
     nameCN_dict[28023] = (u'牙买加','orange')
@@ -27,6 +28,7 @@ def create_gamelist():
     nameCN_dict[68448] = (u'七大奇迹','pink')
 
     nameCN_dict[81453] = (u'家族','green')
+    nameCN_dict[84838] = (u'格斗之王','scarlet')
     nameCN_dict[85256] = (u'时间线','pink')
     nameCN_dict[98778] = (u'花火','blue')
 
@@ -64,6 +66,10 @@ def create_gamelist():
     nameCN_dict[204027] = (u'花舍物语','pink')
     nameCN_dict[205059] = (u'疯狂诡宅(第二版)','purple')
     nameCN_dict[209685] = (u'香料之路','orange')
+    nameCN_dict[220520] = (u'洞穴农夫：山洞对决','grey')
 
     nameCN_dict[215312] = (u'小偷别跑','blue')
+
+
+    nameCN_dict[990001] = (u'奇奥英雄传','brown')
     return nameCN_dict

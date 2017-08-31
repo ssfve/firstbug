@@ -38,13 +38,14 @@ try:
     mode = argv[1]
 except:
     print "usage: python getData.py mode [gameid]"
-    print "mode could be all one"
+    print "mode could be all one paint"
 
 try:
     gameid = int(argv[2])
     games_dict[gameid] = nameCN_dict[gameid]
 except:
-    print "doing all games"
+    print "usage: python getData.py mode [gameid]"
+    print "please specify mode"
     games_dict = nameCN_dict
 
 
@@ -58,5 +59,7 @@ if __name__ == '__main__':
     if mode == 'one':
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
+        bgg_xml_styler(games_dict)
+    if mode == 'paint':
         bgg_xml_styler(games_dict)
 
