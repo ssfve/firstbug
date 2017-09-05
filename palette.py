@@ -14,4 +14,5 @@ def create_colorlist():
     color_dict['deeporange']=('#BF360C','#FBE9E7')
     color_dict['brown']=('#4E342E','#EFEBE9')
     color_dict['lightbrown']=('#795548','#EFEBE9')
+    color_dict['black']=('#212121','#E0E0E0')
     return color_dict

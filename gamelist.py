@@ -5,23 +5,31 @@ def create_gamelist():
     nameCN_dict[13] = (u'卡坦岛','orange')
     nameCN_dict[42] = (u'两河流域','blue')
 
-    nameCN_dict[220] = (u'现代艺术','green')
-    nameCN_dict[521] = (u'加拿大棋','blue')
+    nameCN_dict[118] = (u'现代艺术','green')
+    nameCN_dict[220] = (u'上流社会','purple')
+    nameCN_dict[521] = (u'加拿大棋','lightblue')
     nameCN_dict[811] = (u'拉密','blue')
-    nameCN_dict[822] = (u'卡卡颂','orange')
+    nameCN_dict[822] = (u'卡卡颂','lightblue')
 
     nameCN_dict[1406] = (u'大富翁','green')
     nameCN_dict[2453] = (u'角斗士','grey')
+    nameCN_dict[2653] = (u'逃离亚特兰蒂斯','lightblue')
+    nameCN_dict[3076] = (u'波多黎各','lime')
 
     nameCN_dict[8946] = (u'达芬奇密码','brown')
     nameCN_dict[8098] = (u'图腾快手','orange')
-    nameCN_dict[9209] = (u'车票之旅','blue')
+    nameCN_dict[9209] = (u'车票之旅','lime')
 
+    nameCN_dict[10547] = (u'山屋惊魂','black')
+    nameCN_dict[12333] = (u'冷战热斗','black')
+    nameCN_dict[136063] = (u'禁闭沙漠','deeporange')
     nameCN_dict[15817] = (u'马尼拉','green')
     nameCN_dict[15987] = (u'魔镇惊魂','green')
 
     nameCN_dict[28023] = (u'牙买加','orange')
+    nameCN_dict[34635] = (u'石器时代','orange')
 
+    nameCN_dict[40270] = (u'克苏鲁的呼唤卡牌','green')
     nameCN_dict[40692] = (u'小小世界','purple')
     nameCN_dict[46213] = (u'传情画意','orange')
     nameCN_dict[65244] = (u'禁闭岛','scarlet')
@@ -36,6 +44,7 @@ def create_gamelist():
     nameCN_dict[103343] = (u'权力的游戏(第二版)','blue')
     nameCN_dict[108745] = (u'四季物语','orange')
 
+    nameCN_dict[123540] = (u'东海道','grey')
     nameCN_dict[128664] = (u'时间线','lime')
     nameCN_dict[128882] = (u'阿瓦隆','grey')
 
@@ -43,6 +52,7 @@ def create_gamelist():
     nameCN_dict[134352] = (u'两室一弹','scarlet')
     nameCN_dict[136063] = (u'禁闭沙漠','orange')
 
+    nameCN_dict[146021] = (u'全球惊悚','black')
     nameCN_dict[146916] = (u'快乐感恩节','green')
     nameCN_dict[147949] = (u'一夜终极狼人','lime')
 
@@ -60,6 +70,7 @@ def create_gamelist():
     nameCN_dict[177590] = (u'危情13日:古巴导弹危机','scarlet')
     nameCN_dict[177736] = (u'奥丁的盛宴','deeporange')
 
+    nameCN_dict[191004] = (u'石器时代(儿童版)','orange')
     nameCN_dict[197944] = (u'蟹霸王','orange')
     nameCN_dict[209010] = (u'约德尔战斗学院','brown')
 
