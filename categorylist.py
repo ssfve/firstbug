@@ -75,7 +75,7 @@ def create_categorylist():
     category_dict['Pike and Shot']=''
     category_dict['Pirates']='海盗'
     category_dict['Political']='政治'
-    category_dict['Post-Napoleonic']=''
+    category_dict['Post-Napoleonic']='后拿破仑时代'
     category_dict['Prehistoric']='史前'
     category_dict['Print & Play']='即印即玩'
     category_dict['Puzzle']='拼解通关'

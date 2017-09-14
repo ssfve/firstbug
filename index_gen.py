@@ -100,6 +100,7 @@ def multi_get_letter(str_input):
                 return
     return_list = []
     for one_unicode in unicode_str:
+        #print one_unicode
         return_list.append(single_get_first(one_unicode))
     return "".join(return_list)
 
@@ -107,17 +108,21 @@ def single_get_first(unicode_str):
     str1 = unicode_str.encode('gbk')
     try:
         ord(str1)
+        #print str1
         return str1
     except:
         #print ord(str1[0])
         #print ord(str1[1])
         #print ord('a')
         asc = ord(str1[0]) * 256 + ord(str1[1]) - 65536
+        #print asc
         if asc >= -20319 and asc <= -20284:
           return 'A'
         if asc >= -20283 and asc <= -19776:
           return 'B'
         if asc >= -19775 and asc <= -19219:
+          return 'C'
+        if asc >= -6471 and asc <= -5919:
           return 'C'
         if asc >= -19218 and asc <= -18711:
           return 'D'
