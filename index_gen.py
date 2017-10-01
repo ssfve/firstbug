@@ -100,7 +100,7 @@ def multi_get_letter(str_input):
                 return
     return_list = []
     for one_unicode in unicode_str:
-        print one_unicode
+        #print one_unicode
         return_list.append(single_get_first(one_unicode))
     return "".join(return_list)
 
@@ -115,7 +115,7 @@ def single_get_first(unicode_str):
         #print ord(str1[1])
         #print ord('a')
         asc = ord(str1[0]) * 256 + ord(str1[1]) - 65536
-        print asc
+        #print asc
         if asc >= -20319 and asc <= -20284:
           return 'A'
         if asc >= -20283 and asc <= -19776:
@@ -152,9 +152,9 @@ def single_get_first(unicode_str):
           return 'Q'
         if asc >= -14149 and asc <= -14091:
           return 'R'
-        if asc >= -14090 and asc <= -13144:
+        if asc >= -14090 and asc <= -13315:
           return 'S'
-        if asc >= -13144 and asc <= -12839:
+        if asc >= -13314 and asc <= -12839:
           return 'T'
         if asc >= -12838 and asc <= -12557:
           return 'W'
