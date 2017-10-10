@@ -138,6 +138,8 @@ def single_get_first(unicode_str):
           return 'J'
         if asc >= -16474 and asc <= -16213:
           return 'K'
+        if asc >= -8239 and asc <= -8239:
+          return 'K'
         if asc >= -16212 and asc <= -15641:
           return 'L'
         if asc >= -15640 and asc <= -15166:
@@ -175,32 +177,32 @@ pageFolder = 'page'
 variablesFolder = 'variables'
 slash = '/'
 index_dict = dict()
-index_dict['A']=['A']
-index_dict['B']=['B']
-index_dict['C']=['C']
-index_dict['D']=['D']
-index_dict['E']=['E']
-index_dict['F']=['F']
-index_dict['G']=['G']
-index_dict['H']=['H']
-index_dict['I']=['I']
-index_dict['J']=['J']
-index_dict['K']=['K']
-index_dict['L']=['L']
-index_dict['M']=['M']
-index_dict['N']=['N']
-index_dict['O']=['O']
-index_dict['P']=['P']
-index_dict['Q']=['Q']
-index_dict['R']=['R']
-index_dict['S']=['S']
-index_dict['T']=['T']
-index_dict['U']=['U']
-index_dict['V']=['V']
-index_dict['W']=['W']
-index_dict['X']=['X']
-index_dict['Y']=['Y']
-index_dict['Z']=['Z']
+index_dict['A0']=['A']
+index_dict['B0']=['B']
+index_dict['C0']=['C']
+index_dict['D0']=['D']
+index_dict['E0']=['E']
+index_dict['F0']=['F']
+index_dict['G0']=['G']
+index_dict['H0']=['H']
+index_dict['I0']=['I']
+index_dict['J0']=['J']
+index_dict['K0']=['K']
+index_dict['L0']=['L']
+index_dict['M0']=['M']
+index_dict['N0']=['N']
+index_dict['O0']=['O']
+index_dict['P0']=['P']
+index_dict['Q0']=['Q']
+index_dict['R0']=['R']
+index_dict['S0']=['S']
+index_dict['T0']=['T']
+index_dict['U0']=['U']
+index_dict['V0']=['V']
+index_dict['W0']=['W']
+index_dict['X0']=['X']
+index_dict['Y0']=['Y']
+index_dict['Z0']=['Z']
 
 for gameid in nameCN_dict.keys():
     #print gameid
@@ -210,7 +212,7 @@ for gameid in nameCN_dict.keys():
     #print nameEN
     capital_key = multi_get_letter(nameCN)
     index_dict[capital_key]=[gameid,nameEN,nameCN,capital_key]
-    print index_dict[capital_key]
+    #print index_dict[capital_key]
 
     imgfolder = boardgame_home + slash + image + slash + str(gameid)
     imgfolder_1 = boardgame_home + slash + image + slash + str(gameid) + slash + 'setup'
@@ -246,14 +248,16 @@ f = codecs.open(js_index_path,'w','utf-8')
 f.write("var index_letters = [];\n")
 f.write("var index_games = [];\n")
 for i, letter in enumerate([chr(x) for x in range(65,91)]):
+    #print letter
     f.write('index_letters['+str(i)+']=\''+letter+'\';\n')
 
 for i, key in enumerate(sorted(index_dict.keys())):
     gameinfo = index_dict[key]
+    print gameinfo
     if len(gameinfo) == 1:
         f.write(('index_games['+str(i)+']=[\''+gameinfo[0]+'\',\''+gameinfo[0]+'\'];\n'))
     elif len(gameinfo) == 4:
-        f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1]+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
+        f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1].replace('\'','\\\'')+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
 f.close()
 
 

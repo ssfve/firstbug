@@ -21,6 +21,8 @@ try:
     from_postfix = 'JPG'
     to_postfix = 'jpg'
 except:
+    from_postfix = 'JPG'
+    to_postfix = 'jpg'
     print 'doing jpg progressive for all pics'
     #print "usage: python change_postfix.py gameid"
     #sys.exit(0)
