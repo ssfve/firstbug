@@ -31,6 +31,7 @@ designer_dict = dict()
 designer_dict['Reiner Knizia'] = u'倪睿南'
 designer_dict['Chu-Lan Kao'] = u'高竹岚'
 designer_dict['Uwe Rosenberg'] = u'乌老师'
+designer_dict['Liu Xiao'] = u'刘啸'
 
 type_dict = create_typelist()
 category_dict = create_categorylist()
@@ -296,7 +297,9 @@ def bgg_xml_translater(games_dict):
             except:
                 designer_str += designer + pipeline
         for category in categorys:
-            #print category
+            category = category.replace(' ','')
+            #print "1"+category+"1"
+            #print category_dict[category]
             category_str += category_dict[category] + pipeline
         """
         for designer in designers:

@@ -26,7 +26,8 @@ from palette import create_colorlist
 from api_one import bgg_xml_reader
 from translate_one import bgg_xml_translater
 from style_one import bgg_xml_styler
-
+import index_gen
+from index_gen import *
 
 nameCN_dict = create_gamelist()
 color_dict = create_colorlist()
@@ -56,6 +57,7 @@ if __name__ == '__main__':
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
         bgg_xml_styler(games_dict)
+        index_gen()
     if mode == 'one':
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
