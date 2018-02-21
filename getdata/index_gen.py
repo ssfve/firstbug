@@ -6,6 +6,8 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import codecs
 
+import platform
+from api_one import *
 from gamelist import create_gamelist
 import mysql.connector
 
@@ -174,14 +176,11 @@ def index_gen():
     global cur
     try:
         #gameid = int(argv[1])
-        environment = 'local'
-        if environment == 'local':
-            con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-        elif environment == 'remote':
-            con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-        elif environment == 'linux':
-            con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-
+        userPlatform=platform.system()
+        if(userPlatform=='Linux'):
+            con = getdb('Linux_local')
+        elif(userPlatform=='Windows'):
+            con = getdb('Windows_local')
         cur = con.cursor()
     except:
         print 'usage: python index_gen.py local/remote/linux'
