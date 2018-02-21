@@ -93,8 +93,8 @@ def bgg_xml_styler(games_dict):
             print('System is Windows')
             imgfolder = 'D:\\\\Github\\boardgamerules' + windows_slash + image + windows_slash + str(gameid) + windows_slash
             #print(imgfolder)
-        dominant_color = calc_avg_color(imgfolder+'caption.jpg')
-        print(dominant_color)
+        #theme_color = calc_avg_color(imgfolder+'caption.jpg')
+        #print(dominant_color)
         
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
