@@ -23,7 +23,7 @@ import mysql.connector
 
 from gamelist import create_gamelist
 import platform
-from api_one import writedb
+from api_one import *
 from categorylist import *
 
 
@@ -391,7 +391,19 @@ def bgg_xml_translater(games_dict):
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name_cn+column_str+'values'+value_str
-        #print sql
+        userPlatform=platform.system()
+        if(userPlatform=='Linux'):
+            con = getdb('Linux_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+        elif(userPlatform=='Windows'):
+            con = getdb('Windows_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+            con = getdb('Linux_remote')
+            writedb(con,sql)
+            print('Linux_remote SQL EXECUTION SUCCESS!')
+            
 
         
 """
