@@ -390,7 +390,7 @@ def getdb(userPlatform):
     passwd_dict['Linux_local']=('localhost',3306,'mysql','MyNewPass4!')
     
     pst=passwd_dict[userPlatform]
-    con = mysql.connector.connect(host=pst[0],port=pst[2],user=pst[3],password=pst[4])
+    con = mysql.connector.connect(host=pst[0],port=pst[1],user=pst[2],password=pst[3])
     return con
     
 def writedb(con,sql):
