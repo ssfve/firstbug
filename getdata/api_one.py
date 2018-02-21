@@ -368,49 +368,36 @@ def bgg_xml_reader(games_dict):
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         #print sql
-
-	passwd_dict=dict()
-	passwd_dict['Windows']=('Windows','localhost',3306,'mysql','MyNewPass4!')
-	passwd_dict['Linux']=('Linux','180.76.244.130',3306,'root','b0@rdg@merule5')
-	passwd_dict['Linux_local']=('Linux','localhost',3306,'mysql','MyNewPass4!')
-	userPlatform=platform.system()
-	
-	if(userPlatform=="Linux"):
-	    print "System is Linux"
-	    passwd_tuple=passwd_dict['Linux_local']
-	    #passwd_tuple=passwd_dict['Linux']
-	    writedb(sql,passwd_tuple)
-	elif(userPlatform=="Windows"):
-	    print "System is Windows"
-	    passwd_tuple=passwd_dict[userPlatform]
-	    writedb(sql,passwd_tuple)
-	    passwd_tuple=passwd_dict['Linux']
-            writedb(sql,passwd_tuple)
-		
-def getdb(sql, passwd_tuple):
-    passwd_dict=dict()
-        passwd_dict['Windows']=('Windows','localhost',3306,'mysql','MyNewPass4!')
-        passwd_dict['Linux']=('Linux','180.76.244.130',3306,'root','b0@rdg@merule5')
-        passwd_dict['Linux_local']=('Linux','localhost',3306,'mysql','MyNewPass4!')
+        
         userPlatform=platform.system()
+        if(userPlatform=='Linux'):
+            con = getdb('Linux_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+        elif(userPlatform=='Windows'):
+            con = getdb('Windows_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+            con = getdb('Linux_remote')
+            writedb(con,sql)
+            print('Linux_remote SQL EXECUTION SUCCESS!')
+            
 
-        if(userPlatform=="Linux"):
-            print "System is Linux"
-            passwd_tuple=passwd_dict['Linux_local']
-            #passwd_tuple=passwd_dict['Linux']
-            writedb(sql,passwd_tuple)
-        elif(userPlatform=="Windows"):
-            print "System is Windows"
-            passwd_tuple=passwd_dict[userPlatform]
-            writedb(sql,passwd_tuple)
-            passwd_tuple=passwd_dict['Linux']
-            writedb(sql,passwd_tuple)
-    con = mysql.connector.connect(host=passwd_tuple[1],port=passwd_tuple[2],user=passwd_tuple[3],password=passwd_tuple[4])
+def getdb(userPlatform):
+    passwd_dict=dict()
+    passwd_dict['Windows_local']=('localhost',3306,'mysql','MyNewPass4!')
+    passwd_dict['Linux_remote']=('180.76.244.130',3306,'root','b0@rdg@merule5')
+    passwd_dict['Linux_local']=('localhost',3306,'mysql','MyNewPass4!')
+    
+    pst=passwd_dict[userPlatform]
+    con = mysql.connector.connect(host=pst[0],port=pst[2],user=pst[3],password=pst[4])
+    return con
+    
+def writedb(con,sql):
     cur = con.cursor()
     try:
         cur.execute(sql)
         con.commit()
-        print(passwd_tuple[0]+' SQL EXECUTION SUCCESS!')
     except Exception,e:
         print(sql)
         print(e)

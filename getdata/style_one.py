@@ -20,6 +20,8 @@ except ImportError:
 import urllib2
 import mysql.connector
 from gamelist import create_gamelist
+import platform
+from api_one import *
 from palette import *
 
 nameCN_dict = create_gamelist()
@@ -82,13 +84,8 @@ def sql_gen_str(string):
 def bgg_xml_styler(games_dict):
     #start_urls = 'https://www.boardgamegeek.com/boardgame/3076'
     base_url = 'https://www.boardgamegeek.com/xmlapi/boardgame/{0}?stats=1'
-    #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-    #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
     global column_str, value_str, var_dict
     #game_list = list()
-    con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-    cur = con.cursor()
-
     for gameid in games_dict:
         color = games_dict[gameid][1]
         theme_color = color_dict[color][0]
@@ -103,35 +100,19 @@ def bgg_xml_styler(games_dict):
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         print sql
 
-        """
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-        cur = con.cursor()
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('WINDOWS SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print('error when executing sql')
-            print(sql)
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print(e)
-
-        cur.close()
-        con.close()
-        """
-
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('LINUX SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print('error when executing sql')
-            print(sql)
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print(e)
-
-    cur.close()
-    con.close()
+        userPlatform=platform.system()
+        if(userPlatform=='Linux'):
+            con = getdb('Linux_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+        elif(userPlatform=='Windows'):
+            con = getdb('Windows_local')
+            writedb(con,sql)
+            print(userPlatform+' SQL EXECUTION SUCCESS!')
+            con = getdb('Linux_remote')
+            writedb(con,sql)
+            print('Linux_remote SQL EXECUTION SUCCESS!')
+            
 
 """
 if __name__ == '__main__':
