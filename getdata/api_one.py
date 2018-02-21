@@ -6,10 +6,6 @@ import requests
 import random
 import platform
 import threading
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 from sys import argv
 
 try:
@@ -17,11 +13,9 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-import urllib2
+from urllib.request import urlopen
 import mysql.connector
-#from mysql.connector import connection
 from gamelist import create_gamelist
-#from categorylist import *
 
 nameCN_dict = create_gamelist()
 
@@ -100,7 +94,7 @@ def bgg_xml_reader(games_dict):
         rank_type = ''
         url = base_url.format(gameid)
         print(url)
-        response = urllib2.urlopen(url)
+        response = urlopen(url)
         html = response.read()
 
         # from file
@@ -115,28 +109,28 @@ def bgg_xml_reader(games_dict):
             continue
         # elements is a generator
         elements = xml.iter('yearpublished')
-        yearpublished = elements.next().text
+        yearpublished = next(elements).text
         #print yearpublished
         elements = xml.iter('minplayers')
-        minplayers = elements.next().text
+        minplayers = next(elements).text
 
         elements = xml.iter('maxplayers')
-        maxplayers = elements.next().text
+        maxplayers = next(elements).text
 
         elements = xml.iter('playingtime')
-        playingtime = elements.next().text
+        playingtime = next(elements).text
         #print playingtime
 
         elements = xml.iter('minplaytime')
-        minplaytime = elements.next().text
+        minplaytime = next(elements).text
         #print minplaytime
 
         elements = xml.iter('maxplaytime')
-        maxplaytime = elements.next().text
+        maxplaytime = next(elements).text
         #print maxplaytime
 
         elements = xml.iter('age')
-        age = elements.next().text
+        age = next(elements).text
         #print age
 
         items = xml.iter('name')
@@ -367,7 +361,7 @@ def bgg_xml_reader(games_dict):
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
-        #print sql
+        print(sql)
         
         userPlatform=platform.system()
         if(userPlatform=='Linux'):
@@ -385,11 +379,12 @@ def bgg_xml_reader(games_dict):
 
 def getdb(userPlatform):
     passwd_dict=dict()
-    passwd_dict['Windows_local']=('localhost',3306,'mysql','MyNewPass4!')
-    passwd_dict['Linux_remote']=('180.76.244.130',3306,'root','b0@rdg@merule5')
+    passwd_dict['Windows_local']=('localhost',3306,'root','b0@rdg@merule5')
+    passwd_dict['Linux_remote']=('180.76.244.130',3306,'mysql','MyNewPass4!')
     passwd_dict['Linux_local']=('localhost',3306,'mysql','MyNewPass4!')
     
-    pst=passwd_dict[userPlatform]
+    pst = passwd_dict[userPlatform]
+    #print(pst[0])
     con = mysql.connector.connect(host=pst[0],port=pst[1],user=pst[2],password=pst[3])
     return con
     
@@ -398,7 +393,7 @@ def writedb(con,sql):
     try:
         cur.execute(sql)
         con.commit()
-    except Exception,e:
+    except Exception as e:
         print(sql)
         print(e)
     cur.close()

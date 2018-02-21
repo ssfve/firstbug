@@ -1,9 +1,4 @@
-#coding:utf-8
-
 from sys import argv
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 import codecs
 
 import platform
@@ -60,10 +55,8 @@ def getnameEN(gameid):
         nameEN = data[0]
         #print('EN SQL EXECUTION SUCCESS!')
         return nameEN
-    except Exception,e:
-        print('error when executing sql')
+    except Exception as e:
         print(sql)
-        #print boardgamepublisher.encode('GBK', 'ignore')
         print(e)
 
 def getnameCN(gameid):
@@ -79,43 +72,29 @@ def getnameCN(gameid):
         nameCN = data[0]
         #print('CN SQL EXECUTION SUCCESS!')
         return nameCN
-    except Exception,e:
-        print('\n')
-        print('error when executing sql')
-        #print(nameCN)
+    except Exception as e:
         print(e)
-        print('\n')
 
 def multi_get_letter(str_input):
-    if isinstance(str_input, unicode):
-        unicode_str = str_input
-    else:
-        try:
-            unicode_str = str_input.decode('utf8')
-        except:
-            try:
-                unicode_str = str_input.decode('gbk')
-            except:
-                print str_input
-                print 'unknown coding'
-                return
+    unicode_str = str_input
     return_list = []
     for one_unicode in unicode_str:
         #print one_unicode
-        return_list.append(single_get_first(one_unicode))
+        return_list.append(str(single_get_first(one_unicode)))
     return "".join(return_list)
 
 def single_get_first(unicode_str):
-    str1 = unicode_str.encode('gbk')
+    str1 = unicode_str.encode('GBK')
+    #print(str1)
     try:
         ord(str1)
         #print str1
         return str1
     except:
-        #print ord(str1[0])
-        #print ord(str1[1])
-        #print ord('a')
-        asc = ord(str1[0]) * 256 + ord(str1[1]) - 65536
+        #print(ord(str1[0]))
+        #print(ord(str1[1]))
+        #print(ord('a'))
+        asc = str1[0] * 256 + str1[1] - 65536
         #print asc
         if asc >= -20319 and asc <= -20284:
           return 'A'
@@ -183,7 +162,7 @@ def index_gen():
             con = getdb('Windows_local')
         cur = con.cursor()
     except:
-        print 'usage: python index_gen.py local/remote/linux'
+        print('usage: python index_gen.py local/remote/linux')
         sys.exit(0)
 
     index_dict = dict()
@@ -251,14 +230,12 @@ def index_gen():
 
     for i, key in enumerate(sorted(index_dict.keys())):
         gameinfo = index_dict[key]
-        print gameinfo
+        #print(gameinfo)
         if len(gameinfo) == 1:
             f.write(('index_games['+str(i)+']=[\''+gameinfo[0]+'\',\''+gameinfo[0]+'\'];\n'))
         elif len(gameinfo) == 4:
             f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1].replace('\'','\\\'')+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
     f.close()
-
-
-    print "SUCCESS!"
+    print("SUCCESS!")
 
 

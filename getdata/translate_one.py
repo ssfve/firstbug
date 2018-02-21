@@ -4,12 +4,6 @@ import os
 import io
 import requests
 import random
-#from faker import Factory
-import threading
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 from sys import argv
 
 try:
@@ -17,10 +11,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-import urllib2
 import mysql.connector
-#from mysql.connector import connection
-
 from gamelist import create_gamelist
 import platform
 from api_one import *
@@ -94,16 +85,16 @@ def bgg_xml_translater(games_dict):
     for gameid in games_dict:
         try:
             sql = 'SELECT * FROM '+schema_name+'.'+table_name+' where gameid = '+str(gameid)
-            print sql
-	    userPlatform=platform.system()
-	    if(userPlatform=='Linux'):
-		print('System is Linux')
-		con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+            print(sql)
+            userPlatform = platform.system()
+            if(userPlatform=='Linux'):
+                print('System is Linux')
+                con = getdb('Linux_local')
                 cur = con.cursor()
             elif(userPlatform=='Windows'):
-	    	print('System is Windows')
-		con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-            	cur = con.cursor()
+                print('System is Windows')
+                con = getdb('Windows_local')
+                cur = con.cursor()
             cur.execute(sql)
             records = cur.fetchall()
             data = list(records[0])
@@ -128,7 +119,8 @@ def bgg_xml_translater(games_dict):
 
             suggested_numplayers = str(data[17])
             #nameCN = str(data[18])
-            if games_dict.has_key(gameid):
+            if gameid in games_dict:
+                #print("FOUND")
                 nameCN = str(games_dict[gameid][0])
                 #print nameCN
             else:
@@ -143,10 +135,9 @@ def bgg_xml_translater(games_dict):
             artistsCN = str(data[26])
             publishersCN = str(data[27])
 
-        except Exception,e:
-            print 'error while executing sql 1'
-            print sql
-            print e
+        except Exception as e:
+            print(sql)
+            print(e)
             continue
 
         column_str = '('
@@ -383,14 +374,12 @@ def bgg_xml_translater(games_dict):
         else:
             value_str += ')'
 
-
-
-
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name_cn+column_str+'values'+value_str
+        #print(sql)
         userPlatform=platform.system()
         if(userPlatform=='Linux'):
             con = getdb('Linux_local')

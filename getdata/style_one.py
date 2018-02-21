@@ -4,12 +4,6 @@ import os
 import io
 import requests
 import random
-#from faker import Factory
-import threading
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 from sys import argv
 
 try:
@@ -17,7 +11,6 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 
-import urllib2
 import mysql.connector
 from gamelist import create_gamelist
 import platform
@@ -47,8 +40,9 @@ except:
 
 default_color = '#999999';
 bg_color = '#F4F4F4';
-
-
+slash = '/'
+windows_slash = '\\'
+image = 'img'
 pipeline = '|'
 comma = ','
 left_par = '('
@@ -90,15 +84,25 @@ def bgg_xml_styler(games_dict):
         color = games_dict[gameid][1]
         theme_color = color_dict[color][0]
         content_color = color_dict[color][1]
-        #dominant_color = calc_avg_color(gameid)
-        #return dominant_color
+        
+        userPlatform = platform.system()
+        if(userPlatform=='Linux'):
+            imgfolder = 'D:\Github\boardgamerules' + slash + image + slash + str(gameid) + slash
+            print(imgfolder)
+        elif(userPlatform=='Windows'):
+            print('System is Windows')
+            imgfolder = 'D:\\\\Github\\boardgamerules' + windows_slash + image + windows_slash + str(gameid) + windows_slash
+            #print(imgfolder)
+        dominant_color = calc_avg_color(imgfolder+'caption.jpg')
+        print(dominant_color)
+        
         #column_str = "(self.gameid,year,minAge,rateScore,rateNum,rank,weight,minplayer,time,designers,categorys,mechanisms,publishers,maxplayer,bestplayer,self.name)"
         #value_str = str(self.gameid)+','+str(year)+','+str(minAge)+','+str(rateScore)+','+str(rateNum)+','+str(rank)+','+str(weight)+','+str(minplayer)+','+str(time)+','+  \
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
         column_str = '(gameid,theme_color,content_color,default_color,bg_color)'
         value_str = str((gameid,theme_color,content_color,default_color,bg_color))
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
-        print sql
+        print(sql)
 
         userPlatform=platform.system()
         if(userPlatform=='Linux'):
