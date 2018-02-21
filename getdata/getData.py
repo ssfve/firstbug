@@ -9,7 +9,7 @@ import threading
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-
+sys.path.append('/opt/mount/anaconda2/bin/python/site-packages')
 from sys import argv
 
 try:

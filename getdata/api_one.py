@@ -4,7 +4,7 @@ import os
 import io
 import requests
 import random
-#from faker import Factory
+import platform
 import threading
 import sys
 reload(sys)
@@ -98,7 +98,6 @@ def bgg_xml_reader(games_dict):
         rank_subtype = ''
         bayesaverage_type = ''
         rank_type = ''
-
         url = base_url.format(gameid)
         print(url)
         response = urllib2.urlopen(url)
@@ -370,38 +369,53 @@ def bgg_xml_reader(games_dict):
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
         #print sql
 
-        #if environment == 'linux':
-        #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-        #con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-        #con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
-        con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-        cur = con.cursor()
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('WINDOWS SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print('error when executing sql')
-            print(sql)
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print(e)
-        cur.close()
-        con.close()
+	passwd_dict=dict()
+	passwd_dict['Windows']=('Windows','localhost',3306,'mysql','MyNewPass4!')
+	passwd_dict['Linux']=('Linux','180.76.244.130',3306,'root','b0@rdg@merule5')
+	passwd_dict['Linux_local']=('Linux','localhost',3306,'mysql','MyNewPass4!')
+	userPlatform=platform.system()
+	
+	if(userPlatform=="Linux"):
+	    print "System is Linux"
+	    passwd_tuple=passwd_dict['Linux_local']
+	    #passwd_tuple=passwd_dict['Linux']
+	    writedb(sql,passwd_tuple)
+	elif(userPlatform=="Windows"):
+	    print "System is Windows"
+	    passwd_tuple=passwd_dict[userPlatform]
+	    writedb(sql,passwd_tuple)
+	    passwd_tuple=passwd_dict['Linux']
+            writedb(sql,passwd_tuple)
+		
+def getdb(sql, passwd_tuple):
+    passwd_dict=dict()
+        passwd_dict['Windows']=('Windows','localhost',3306,'mysql','MyNewPass4!')
+        passwd_dict['Linux']=('Linux','180.76.244.130',3306,'root','b0@rdg@merule5')
+        passwd_dict['Linux_local']=('Linux','localhost',3306,'mysql','MyNewPass4!')
+        userPlatform=platform.system()
 
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-        cur = con.cursor()
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('LINUX SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print('error when executing sql')
-            print(sql)
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print(e)
-        cur.close()
-        con.close()
-
+        if(userPlatform=="Linux"):
+            print "System is Linux"
+            passwd_tuple=passwd_dict['Linux_local']
+            #passwd_tuple=passwd_dict['Linux']
+            writedb(sql,passwd_tuple)
+        elif(userPlatform=="Windows"):
+            print "System is Windows"
+            passwd_tuple=passwd_dict[userPlatform]
+            writedb(sql,passwd_tuple)
+            passwd_tuple=passwd_dict['Linux']
+            writedb(sql,passwd_tuple)
+    con = mysql.connector.connect(host=passwd_tuple[1],port=passwd_tuple[2],user=passwd_tuple[3],password=passwd_tuple[4])
+    cur = con.cursor()
+    try:
+        cur.execute(sql)
+        con.commit()
+        print(passwd_tuple[0]+' SQL EXECUTION SUCCESS!')
+    except Exception,e:
+        print(sql)
+        print(e)
+    cur.close()
+    con.close()
 """
 if __name__ == '__main__':
     bgg_xml_reader()

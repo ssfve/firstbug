@@ -22,6 +22,8 @@ import mysql.connector
 #from mysql.connector import connection
 
 from gamelist import create_gamelist
+import platform
+from api_one import writedb
 from categorylist import *
 
 
@@ -93,8 +95,15 @@ def bgg_xml_translater(games_dict):
         try:
             sql = 'SELECT * FROM '+schema_name+'.'+table_name+' where gameid = '+str(gameid)
             print sql
-            con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
-            cur = con.cursor()
+	    userPlatform=platform.system()
+	    if(userPlatform=='Linux'):
+		print('System is Linux')
+		con = mysql.connector.connect(host='localhost',port=3306,user='mysql',password='MyNewPass4!')
+                cur = con.cursor()
+            elif(userPlatform=='Windows'):
+	    	print('System is Windows')
+		con = mysql.connector.connect(host='localhost',port=3306,user='root',password='b0@rdg@merule5')
+            	cur = con.cursor()
             cur.execute(sql)
             records = cur.fetchall()
             data = list(records[0])
@@ -384,32 +393,7 @@ def bgg_xml_translater(games_dict):
         sql = 'REPLACE INTO '+schema_name+'.'+table_name_cn+column_str+'values'+value_str
         #print sql
 
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('WINDOWS SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print 'error when executing sql 2'
-            print sql
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print e
-
-        cur.close()
-        con.close()
-
-        con = mysql.connector.connect(host='180.76.244.130',port=3306,user='mysql',password='MyNewPass4!')
-        cur = con.cursor()
-        try:
-            cur.execute(sql)
-            con.commit()
-            print('LINUX SQL EXECUTION SUCCESS!')
-        except Exception,e:
-            print 'error when executing sql 2'
-            print sql
-            #print boardgamepublisher.encode('GBK', 'ignore')
-            print e
-        cur.close()
-        con.close()
+        
 """
 if __name__ == '__main__':
     bgg_xml_translater()

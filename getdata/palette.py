@@ -1,3 +1,7 @@
+import sys
+#reload(sys)
+#sys.setdefaultencoding('utf8')
+sys.path.append('/opt/mount/anaconda2/lib/python2.7/site-packages')
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt

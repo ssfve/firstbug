@@ -40,7 +40,10 @@ variablesFolder = 'variables'
 index_variables_filename = 'index.variables.js'
 
 #js_page_folder = boardgame_home + slash + jsFolder + slash + pageFolder + slash
+
 js_page_folder = boardgame_home + slash + indexFolder + slash + variablesFolder + slash
+#/opt/mount/apache-tomcat-9.0.0.M21/webapps/boardgamerules/index/variables
+
 js_index_path = js_page_folder + index_variables_filename
 cur = None
 
