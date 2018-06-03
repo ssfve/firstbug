@@ -235,8 +235,9 @@ def index_gen():
         f.write('index_letters['+str(i)+']=\''+letter+'\';\n')
 
     for i, key in enumerate(sorted(index_dict.keys())):
+        print(key)
         gameinfo = index_dict[key]
-        #print(gameinfo)
+        yield print(gameinfo)
         if len(gameinfo) == 1:
             f.write(('index_games['+str(i)+']=[\''+gameinfo[0]+'\',\''+gameinfo[0]+'\'];\n'))
         elif len(gameinfo) == 4:

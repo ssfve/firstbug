@@ -89,6 +89,7 @@ def bgg_xml_reader(games_dict):
         suggested_playerage = ''
         language_dependence = ''
         game_type = ''
+        name= ''
         error_flag = False
 
         bayesaverage_subtype = ''
@@ -120,146 +121,244 @@ def bgg_xml_reader(games_dict):
         if(BGG_flag):
             elements = xml.iter('yearpublished')
             yearpublished = next(elements).text
-        else:
-            currentYear = datetime.now().year
-            yearpublished = input("Please input yearpublished (default: %s): ".format(currentYear))
-            while(~(yearpublished == None) or ~(len(yearpublished) == 4 and yearpublished.isdigit())):
-                print("format error")
-                yearpublished = input("Please input yearpublished (default: %s): ".format(currentYear))
-            if(yearpublished==None):
-                yearpublished=currentYear
-            print(yearpublished)
-        #print yearpublished
-        elements = xml.iter('minplayers')
-        minplayers = next(elements).text
+            elements = xml.iter('minplayers')
+            minplayers = next(elements).text
+            elements = xml.iter('maxplayers')
+            maxplayers = next(elements).text
+            elements = xml.iter('playingtime')
+            playingtime = next(elements).text
+            elements = xml.iter('minplaytime')
+            minplaytime = next(elements).text
+            elements = xml.iter('maxplaytime')
+            maxplaytime = next(elements).text
+            elements = xml.iter('age')
+            age = next(elements).text
+            items = xml.iter('name')
+            for item in items:
+                if item.get('primary') == 'true':
+                    name = item.text
+            if name != None:
+                name = name.replace('"', '')
+            boardgamemechanics = xml.iter('boardgamemechanic')
+            for mechanic in boardgamemechanics:
+                mechanics += mechanic.text + pipeline
+            # print boardgamemechanic
 
-        elements = xml.iter('maxplayers')
-        maxplayers = next(elements).text
+            boardgamefamilys = xml.iter('boardgamefamily')
+            for family in boardgamefamilys:
+                familys += family.text.replace('"', '') + pipeline
+            # print boardgamefamily
 
-        elements = xml.iter('playingtime')
-        playingtime = next(elements).text
-        #print playingtime
+            boardgamecategorys = xml.iter('boardgamecategory')
+            for category in boardgamecategorys:
+                categorys += category.text + pipeline
+            # print boardgamecategory
 
-        elements = xml.iter('minplaytime')
-        minplaytime = next(elements).text
-        #print minplaytime
+            boardgameartists = xml.iter('boardgameartist')
+            for artist in boardgameartists:
+                artists = artist.text.replace('"', '') + pipeline
+            # print boardgameartist.encode('GBK', 'ignore')
 
-        elements = xml.iter('maxplaytime')
-        maxplaytime = next(elements).text
-        #print maxplaytime
+            boardgamepublishers = xml.iter('boardgamepublisher')
+            for publisher in boardgamepublishers:
+                # print publisher.text.encode('GBK', 'ignore')
+                publishers += publisher.text.replace('"', '') + pipeline
+            # print boardgamepublisher.encode('GBK', 'ignore')
 
-        elements = xml.iter('age')
-        age = next(elements).text
-        #print age
+            boardgamedesigners = xml.iter('boardgamedesigner')
+            for designer in boardgamedesigners:
+                designers += designer.text.replace('"', '') + pipeline
+            # print boardgamedesigner.encode('GBK', 'ignore')
 
-        items = xml.iter('name')
-        for item in items:
-            if item.get('primary') == 'true':
-                name = item.text
-        if name != None:
-            name = name.replace('"','')
-        #print name
+            boardgameexpansions = xml.iter('boardgameexpansion')
+            for expansion in boardgameexpansions:
+                expansions += expansion.text.replace('"', '') + pipeline
+            # print boardgameexpansion.encode('GBK', 'ignore')
 
-        boardgamemechanics = xml.iter('boardgamemechanic')
-        for mechanic in boardgamemechanics:
-            mechanics += mechanic.text + pipeline
-        #print boardgamemechanic
-
-        boardgamefamilys = xml.iter('boardgamefamily')
-        for family in boardgamefamilys:
-            familys += family.text.replace('"','') + pipeline
-        #print boardgamefamily
-
-        boardgamecategorys = xml.iter('boardgamecategory')
-        for category in boardgamecategorys:
-            categorys += category.text + pipeline
-        #print boardgamecategory
-
-        boardgameartists = xml.iter('boardgameartist')
-        for artist in boardgameartists:
-            artists = artist.text.replace('"','') + pipeline
-        #print boardgameartist.encode('GBK', 'ignore')
-
-        boardgamepublishers = xml.iter('boardgamepublisher')
-        for publisher in boardgamepublishers:
-            #print publisher.text.encode('GBK', 'ignore')
-            publishers += publisher.text.replace('"','') + pipeline
-        #print boardgamepublisher.encode('GBK', 'ignore')
-
-        boardgamedesigners = xml.iter('boardgamedesigner')
-        for designer in boardgamedesigners:
-            designers += designer.text.replace('"','') + pipeline
-        #print boardgamedesigner.encode('GBK', 'ignore')
-
-        boardgameexpansions = xml.iter('boardgameexpansion')
-        for expansion in boardgameexpansions:
-            expansions += expansion.text.replace('"','') + pipeline
-        #print boardgameexpansion.encode('GBK', 'ignore')
-
-
-        boardgamesubdomains = xml.iter('boardgamesubdomain')
-        for subdomain in boardgamesubdomains:
-            subdomains += subdomain.text + pipeline
-        #print boardgamesubdomain
-
-        polls = xml.iter('poll')
-        for poll in polls:
-            if poll.get('name') == 'suggested_numplayers':
-                numvotes = 0
-                for results_set in poll.iter('results'):
-                    for result in results_set.iter('result'):
-                        if result.get('value') == 'Best':
+            boardgamesubdomains = xml.iter('boardgamesubdomain')
+            for subdomain in boardgamesubdomains:
+                subdomains += subdomain.text + pipeline
+            # print boardgamesubdomain
+            polls = xml.iter('poll')
+            for poll in polls:
+                if poll.get('name') == 'suggested_numplayers':
+                    numvotes = 0
+                    for results_set in poll.iter('results'):
+                        for result in results_set.iter('result'):
+                            if result.get('value') == 'Best':
+                                temp_votes = int(result.get('numvotes'))
+                                if temp_votes > numvotes:
+                                    numvotes = temp_votes
+                                    suggested_numplayers = results_set.get('numplayers')
+                if poll.get('name') == 'language_dependence':
+                    numvotes = 0
+                    for results_set in poll.iter('results'):
+                        for result in results_set.iter('result'):
                             temp_votes = int(result.get('numvotes'))
                             if temp_votes > numvotes:
                                 numvotes = temp_votes
-                                suggested_numplayers = results_set.get('numplayers')
-            if poll.get('name') == 'language_dependence':
-                numvotes = 0
-                for results_set in poll.iter('results'):
-                    for result in results_set.iter('result'):
-                        temp_votes = int(result.get('numvotes'))
-                        if temp_votes > numvotes:
-                            numvotes = temp_votes
-                            language_dependence = result.get('level')
-            if poll.get('name') == 'suggested_playerage':
-                numvotes = 0
-                for results_set in poll.iter('results'):
-                    for result in results_set.iter('result'):
-                        temp_votes = int(result.get('numvotes'))
-                        if temp_votes > numvotes:
-                            numvotes = temp_votes
-                            suggested_playerage = result.get('value')
-        #print suggested_numplayers
-        #print language_dependence
-        #print suggested_playerage
+                                language_dependence = result.get('level')
+                if poll.get('name') == 'suggested_playerage':
+                    numvotes = 0
+                    for results_set in poll.iter('results'):
+                        for result in results_set.iter('result'):
+                            temp_votes = int(result.get('numvotes'))
+                            if temp_votes > numvotes:
+                                numvotes = temp_votes
+                                suggested_playerage = result.get('value')
+            # print suggested_numplayers
+            # print language_dependence
+            # print suggested_playerage
 
-        statistics = xml.iter('statistics')
-        for statistic in statistics:
-            usersrated = statistic.find('ratings').find('usersrated').text
-            average = statistic.find('ratings').find('average').text
-            numweights = statistic.find('ratings').find('numweights').text
-            averageweight = statistic.find('ratings').find('averageweight').text
-            #bayesaverage_subtype = statistic.find('ratings').find('bayesaverage').text
-            ranks = statistic.find('ratings').find('ranks')
-            for rank in ranks:
-                #print rank.get('type')
-                #print rank.get('friednlyname')
-                if rank.get('type') == "subtype":
-                    bayesaverage_subtype = rank.get('bayesaverage')
-                    rank_subtype = rank.get('value')
-                if rank.get('type') != "subtype":
-                    game_type = rank.get('type')
-                    bayesaverage_type = rank.get('bayesaverage')
-                    rank_type = rank.get('value')
-        #print usersrated
-        #print average
-        #print bayesaverage_subtype
-        #print rank_subtype
-        #print bayesaverage_type
-        #print rank_type
-        #print numweights
-        #print averageweight
-        #print game_type
+            statistics = xml.iter('statistics')
+            for statistic in statistics:
+                usersrated = statistic.find('ratings').find('usersrated').text
+                average = statistic.find('ratings').find('average').text
+                numweights = statistic.find('ratings').find('numweights').text
+                averageweight = statistic.find('ratings').find('averageweight').text
+                # bayesaverage_subtype = statistic.find('ratings').find('bayesaverage').text
+                ranks = statistic.find('ratings').find('ranks')
+                for rank in ranks:
+                    # print rank.get('type')
+                    # print rank.get('friednlyname')
+                    if rank.get('type') == "subtype":
+                        bayesaverage_subtype = rank.get('bayesaverage')
+                        rank_subtype = rank.get('value')
+                    if rank.get('type') != "subtype":
+                        game_type = rank.get('type')
+                        bayesaverage_type = rank.get('bayesaverage')
+                        rank_type = rank.get('value')
+            # print usersrated
+            # print average
+            # print bayesaverage_subtype
+            # print rank_subtype
+            # print bayesaverage_type
+            # print rank_type
+            # print numweights
+            # print averageweight
+            # print game_type
+        else:
+            currentYear = datetime.now().year
+            yearpublished = input("Please input yearpublished (default:{}):".format(currentYear))
+            while((len(yearpublished)!=4) or (not(yearpublished.isdigit()))):
+                if (yearpublished == ""):
+                    yearpublished = currentYear
+                    break
+                else:
+                    print("year format error")
+                    yearpublished = input("Please input yearpublished (default:{}):".format(currentYear))
+            print(yearpublished)
+
+            default_minplayers = 1
+            minplayers = input("Please input minplayers (default:{}):".format(default_minplayers))
+            while ((not (minplayers.isdigit()))):
+                if (minplayers == ""):
+                    minplayers = default_minplayers
+                    break
+                else:
+                    print("minplayers format error")
+                    minplayers = input("Please input minplayers (default:{}):".format(default_minplayers))
+            print(minplayers)
+
+            default_maxplayers = 4
+            maxplayers = input("Please input maxplayers (default:{}):".format(default_maxplayers))
+            while ((not (maxplayers.isdigit()))):
+                if (maxplayers == ""):
+                    maxplayers = default_maxplayers
+                    break
+                else:
+                    print("maxplayers format error")
+                    maxplayers = input("Please input maxplayers (default:{}):".format(default_maxplayers))
+            print(maxplayers)
+
+            default_playingtime = 30
+            playingtime = input("Please input playingtime (default:{}):".format(default_playingtime))
+            while ((not (playingtime.isdigit()))):
+                if (playingtime == ""):
+                    playingtime = default_playingtime
+                    break
+                else:
+                    print("playingtime format error")
+                    playingtime = input("Please input playingtime (default:{}):".format(default_playingtime))
+            print(playingtime)
+
+            default_minplaytime = 10
+            minplaytime = input("Please input minplaytime (default:{}):".format(default_minplaytime))
+            while ((not (minplaytime.isdigit()))):
+                if (minplaytime == ""):
+                    minplaytime = default_minplaytime
+                    break
+                else:
+                    print("minplaytime format error")
+                    minplaytime = input("Please input minplaytime (default:{}):".format(default_minplaytime))
+            print(minplaytime)
+
+            default_maxplaytime = 60
+            maxplaytime = input("Please input maxplaytime (default:{}):".format(default_maxplaytime))
+            while ((not (maxplaytime.isdigit()))):
+                if (maxplaytime == ""):
+                    maxplaytime = default_maxplaytime
+                    break
+                else:
+                    print("maxplaytime format error")
+                    maxplaytime = input("Please input maxplaytime (default:{}):".format(default_maxplaytime))
+            print(maxplaytime)
+
+            default_age= 8
+            age = input("Please input age (default:{}):".format(default_age))
+            while ((not (age.isdigit()))):
+                if (age == ""):
+                    age = default_age
+                    break
+                else:
+                    print("age format error")
+                    age = input("Please input age (default:{}):".format(default_age))
+            print(age)
+
+            default_suggested_playerage = 8
+            suggested_playerage = input("Please input suggested_playerage (default:{}):".format(default_suggested_playerage))
+            while ((not (suggested_playerage.isdigit()))):
+                if (suggested_playerage == ""):
+                    suggested_playerage = default_suggested_playerage
+                    break
+                else:
+                    print("suggested_playerage format error")
+                    suggested_playerage = input("Please input suggested_playerage (default:{}):".format(default_suggested_playerage))
+            print(suggested_playerage)
+
+            default_suggested_numplayers = 4
+            suggested_numplayers = input("Please input suggested_numplayers (default:{}):".format(default_suggested_numplayers))
+            while ((not (suggested_numplayers.isdigit()))):
+                if (suggested_numplayers == ""):
+                    suggested_numplayers = default_suggested_numplayers
+                    break
+                else:
+                    print("suggested_numplayers format error")
+                    suggested_numplayers = input(
+                        "Please input suggested_numplayers (default:{}):".format(default_suggested_numplayers))
+            print(suggested_numplayers)
+            confirm_flag = "n"
+            while(confirm_flag == "n"):
+                name = input("Please input name:")
+                print("name is {}".format(name))
+                confirm_flag = input("Please confirm(y/n):")
+            print(name)
+
+            average=0
+            averageweight=0
+            numweights=0
+            usersrated=0
+
+            mechanics=""
+            designers=""
+            artists=""
+            categorys=""
+            familys=""
+            publishers=""
+            expansions=""
+
+
+
         var_dict['yearpublished']=yearpublished
         var_dict['age']=age
         var_dict['minplaytime']=minplaytime
