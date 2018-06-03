@@ -80,7 +80,12 @@ def multi_get_letter(str_input):
     return_list = []
     for one_unicode in unicode_str:
         #print one_unicode
-        return_list.append(str(single_get_first(one_unicode)))
+        try:
+            letter = single_get_first(one_unicode).decode("UTF-8")
+        except Exception as e:
+            letter = single_get_first(one_unicode)
+        return_list.append(letter)
+    #print(return_list)
     return "".join(return_list)
 
 def single_get_first(unicode_str):
@@ -166,6 +171,7 @@ def index_gen():
         sys.exit(0)
 
     index_dict = dict()
+    index_dict['00']=['#']
     index_dict['A0']=['A']
     index_dict['B0']=['B']
     index_dict['C0']=['C']
@@ -236,6 +242,23 @@ def index_gen():
         elif len(gameinfo) == 4:
             f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1].replace('\'','\\\'')+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
     f.close()
-    print("SUCCESS!")
+    print("WRITTEN TO JS SUCCESS!")
+    
+    f = codecs.open("./gamelist",'w','utf-8')
+    for i, key in enumerate(sorted(index_dict.keys())):
+        gameinfo = index_dict[key]
+        #print(gameinfo)
+        #len 1 is the letter
+        #len 4 is the game name
+        if len(gameinfo) == 1:
+            f.write(str(gameinfo[0])+'\n')
+        elif len(gameinfo) == 4:
+            f.write(str(gameinfo[2])+'\n')
+    f.close()
+    print("WRITTEN TO LIST SUCCESS!")
+    print(len(index_dict.keys())-27)
 
+
+if __name__ == '__main__':
+    index_gen()
 

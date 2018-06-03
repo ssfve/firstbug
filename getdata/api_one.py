@@ -7,6 +7,9 @@ import random
 import platform
 import threading
 from sys import argv
+import datetime
+from datetime import datetime
+import re
 
 try:
     import xml.etree.cElementTree as ET
@@ -106,10 +109,26 @@ def bgg_xml_reader(games_dict):
             error_flag = True
             print(str(gameid) + pipeline + error.get('message'))
         if error_flag == True:
-            continue
+            default_enabled = input("Is this a game not in BGG?(y/n): ")
+            if(default_enabled == 'y'):
+                BGG_flag = False
+            else:
+                BGG_flag = True
+                print("skipping this game")
+                continue
         # elements is a generator
-        elements = xml.iter('yearpublished')
-        yearpublished = next(elements).text
+        if(BGG_flag):
+            elements = xml.iter('yearpublished')
+            yearpublished = next(elements).text
+        else:
+            currentYear = datetime.now().year
+            yearpublished = input("Please input yearpublished (default: %s): ".format(currentYear))
+            while(~(yearpublished == None) or ~(len(yearpublished) == 4 and yearpublished.isdigit())):
+                print("format error")
+                yearpublished = input("Please input yearpublished (default: %s): ".format(currentYear))
+            if(yearpublished==None):
+                yearpublished=currentYear
+            print(yearpublished)
         #print yearpublished
         elements = xml.iter('minplayers')
         minplayers = next(elements).text
@@ -361,7 +380,7 @@ def bgg_xml_reader(games_dict):
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name+column_str+'values'+value_str
-        print(sql)
+        #print(sql)
         
         userPlatform=platform.system()
         if(userPlatform=='Linux'):

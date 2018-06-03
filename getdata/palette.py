@@ -3,6 +3,7 @@ import sys
 #sys.setdefaultencoding('utf8')
 sys.path.append('/opt/mount/anaconda2/lib/python2.7/site-packages')
 import cv2
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import itemfreq
@@ -36,10 +37,16 @@ def create_colorlist():
     
 def calc_avg_color(img_path):
     img = cv2.imread(img_path)
-    average_color = [img[:, :, i].mean() for i in range(img.shape[-1])]
+    try:
+        average_color = [img[:, :, i].mean() for i in range(img.shape[-1])]
+    except Exception as e:
+        print(e)
+        upload_finished = input("Has uploading image finished?(y/n): ")
+        img = cv2.imread(img_path)
+        average_color = [img[:, :, i].mean() for i in range(img.shape[-1])]
     arr = np.float32(img)
     pixels = arr.reshape((-1, 3))
-    n_colors = 5
+    n_colors = 3
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
     flags = cv2.KMEANS_RANDOM_CENTERS
     _, labels, centroids = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
@@ -47,11 +54,16 @@ def calc_avg_color(img_path):
     quantized = palette[labels.flatten()]
     quantized = quantized.reshape(img.shape)
     dom_color = palette[np.argmax(itemfreq(labels)[:, -1])]
-    
-    
-
-    color_hex = "#{0:02x}{1:02x}{2:02x}".format(clamp(dom_color[0]), clamp(dom_color[1]), clamp(dom_color[2]))
-    return color_hex
-    
+    color_hex = "{0:02x}{1:02x}{2:02x}".format(clamp(dom_color[0]), clamp(dom_color[1]), clamp(dom_color[2]))
+    #print(color_hex)
+    svg_path='D://Github/boardgamerules/img/interface/'
+    fout = open(svg_path+color_hex+r'.svg','w+')
+    with open(svg_path+r'template.txt','r') as fin:
+        line_array = fin.readlines()
+        for lineno,line in enumerate(line_array):
+            line_array[lineno] = line.replace('template',color_hex)
+        fout.writelines(line_array)
+    fout.close()
+    return "#"+color_hex
 def clamp(x): 
     return max(0, min(x, 255))
