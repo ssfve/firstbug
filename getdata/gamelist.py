@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
-def create_gamelist():
+
+def create_game_list():
     nameCN_dict = dict()
     nameCN_dict[3] = (u'侍','scarlet')
     nameCN_dict[5] = (u'并购','scarlet')

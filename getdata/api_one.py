@@ -1,27 +1,17 @@
 # -*- coding:utf-8 -*-
 
-import os
-import io
-import requests
-import random
 import platform
-import threading
-from sys import argv
 import datetime
 from datetime import datetime
-import re
-
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
-
 from urllib.request import urlopen
 import mysql.connector
-from gamelist import create_gamelist
+from gamelist import create_game_list
 
-nameCN_dict = create_gamelist()
-
+nameCN_dict = create_game_list()
 schema_name = 'boardgames'
 table_name = 'bggdata'
 

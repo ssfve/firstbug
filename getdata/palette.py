@@ -1,12 +1,7 @@
-import sys
-#reload(sys)
-#sys.setdefaultencoding('utf8')
-sys.path.append('/opt/mount/anaconda2/lib/python2.7/site-packages')
 import cv2
-import time
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.stats import itemfreq
+
 slash = '/'
 image = 'img'
 jsFolder = 'js'
@@ -74,5 +69,7 @@ def calc_avg_color(img_path):
         fout.writelines(line_array)
     fout.close()
     return "#"+color_hex
-def clamp(x,amp_factor):
+
+
+def clamp(x, amp_factor):
     return int(max(0, min(x, 255))*amp_factor)

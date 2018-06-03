@@ -1,23 +1,14 @@
 # -*- coding:utf-8 -*-
-
-import os
-import io
-import requests
-import random
-from sys import argv
-from index_gen import write_js
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
 
-import mysql.connector
-from gamelist import create_gamelist
-import platform
+from gamelist import create_game_list
 from api_one import *
 from palette import *
 
-nameCN_dict = create_gamelist()
+nameCN_dict = create_game_list()
 color_dict = create_colorlist()
 
 schema_name = 'boardgames'

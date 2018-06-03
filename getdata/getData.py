@@ -1,11 +1,12 @@
-from gamelist import create_gamelist
+import indexGen
+from indexGen import *
+from gamelist import create_game_list
 from palette import create_colorlist
 from api_one import bgg_xml_reader
 from translate_one import bgg_xml_translater
-from index_gen import write_js
 from style_one import bgg_xml_styler
 
-nameCN_dict = create_gamelist()
+nameCN_dict = create_game_list()
 color_dict = create_colorlist()
 games_dict = dict()
 schema_name = 'boardgames'
@@ -41,8 +42,7 @@ if __name__ == '__main__':
     if mode == 'all':
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
-        # bgg_xml_translater(games_dict)
-        write_js(nameCN_dict)
+        writejs(nameCN_dict)
         bgg_xml_styler(games_dict)
         print("http://www.boardgamerules.cn/index/gameCover.html?id={0}".format(gameId))
     if mode == 'one':

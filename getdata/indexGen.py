@@ -1,17 +1,9 @@
 # -*- coding:utf-8 -*-
 
+import os
 import codecs
 from api_one import *
-from gamelist import create_gamelist
-nameCN_dict = create_gamelist()
 
-
-"""
-try:
-    environment = argv[1]
-Exception:
-    print 'usage: python index_gen.py'
-"""
 schema_name = 'boardgames'
 table_name_en = 'bggdata'
 table_name_cn = 'bggdatacn'
@@ -31,43 +23,80 @@ variablesFolder = 'variables'
 index_variables_filename = 'index.variables.js'
 
 # js_page_folder = boardgame_home + slash + jsFolder + slash + pageFolder + slash
-
 js_page_folder = boardgame_home + slash + indexFolder + slash + variablesFolder + slash
 # /opt/mount/apache-tomcat-9.0.0.M21/webapps/boardgamerules/index/variables
-
 js_index_path = js_page_folder + index_variables_filename
 
+index_dict = dict()
+index_dict['00'] = ['#']
+index_dict['A0'] = ['A']
+index_dict['B0'] = ['B']
+index_dict['C0'] = ['C']
+index_dict['D0'] = ['D']
+index_dict['E0'] = ['E']
+index_dict['F0'] = ['F']
+index_dict['G0'] = ['G']
+index_dict['H0'] = ['H']
+index_dict['I0'] = ['I']
+index_dict['J0'] = ['J']
+index_dict['K0'] = ['K']
+index_dict['L0'] = ['L']
+index_dict['M0'] = ['M']
+index_dict['N0'] = ['N']
+index_dict['O0'] = ['O']
+index_dict['P0'] = ['P']
+index_dict['Q0'] = ['Q']
+index_dict['R0'] = ['R']
+index_dict['S0'] = ['S']
+index_dict['T0'] = ['T']
+index_dict['U0'] = ['U']
+index_dict['V0'] = ['V']
+index_dict['W0'] = ['W']
+index_dict['X0'] = ['X']
+index_dict['Y0'] = ['Y']
+index_dict['Z0'] = ['Z']
 
-def getnameEN(gameid):
-    global cur
-    sql = 'SELECT name FROM '+schema_name+'.'+table_name_en+' WHERE gameid = '+str(gameid)
+def get_name_en(game_id):
+    sql = 'SELECT name FROM '+schema_name+'.'+table_name_en+' WHERE gameid = '+str(game_id)
     # print sql
     try:
+        user_platform = platform.system()
+        if user_platform == 'Linux':
+            con = getdb('Linux_local')
+        elif user_platform == 'Windows':
+            con = getdb('Windows_local')
+        cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
+        con.close()
         data = list(records[0])
-        nameEN = data[0]
+        name_en = data[0]
         # print('EN SQL EXECUTION SUCCESS!')
-        return nameEN
+        return name_en
     except Exception as e:
-        print(sql)
         print(e)
 
 
-def getnameCN(gameid):
-    global cur
-    sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(gameid)
-    # print sql
+def get_name_cn(game_id):
+    sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(game_id)
     try:
+        user_platform = platform.system()
+        if user_platform == 'Linux':
+            con = getdb('Linux_local')
+        elif user_platform == 'Windows':
+            con = getdb('Windows_local')
+        cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
+        con.close()
         # print records
         data = list(records[0])
         # print data
-        nameCN = data[0]
+        name_cn = data[0]
         # print('CN SQL EXECUTION SUCCESS!')
-        return nameCN
+        return name_cn
     except Exception as e:
+        print("get name cn")
         print(e)
 
 
@@ -126,91 +155,49 @@ def single_get_first(unicode_str):
             return 'K'
         if -15641 >= asc >= -16212:
             return 'L'
-        if asc >= -15640 and asc <= -15166:
+        if -15166 >= asc >= -15640:
             return 'M'
-        if asc >= -15165 and asc <= -14923:
+        if -14923 >= asc >= -15165:
             return 'N'
-        if asc >= -14922 and asc <= -14915:
+        if -14915 >= asc >= -14922:
             return 'O'
-        if asc >= -14914 and asc <= -14631:
+        if -14631 >= asc >= -14914:
             return 'P'
-        if asc >= -14630 and asc <= -14150:
+        if -14150 >= asc >= -14630:
             return 'Q'
-        if asc >= -14149 and asc <= -14091:
+        if -14091 >= asc >= -14149:
             return 'R'
-        if asc >= -14090 and asc <= -13315:
+        if -13315 >= asc >= -14090:
             return 'S'
-        if asc >= -13314 and asc <= -12839:
+        if -12839 >= asc >= -13314:
             return 'T'
-        if asc >= -12838 and asc <= -12557:
+        if -12557 >= asc >= -12838:
             return 'W'
-        if asc >= -12556 and asc <= -11848:
+        if -11848 >= asc >= -12556:
             return 'X'
-        if asc >= -11847 and asc <= -11056:
+        if -11056 >= asc >= -11847:
             return 'Y'
         if -10247 >= asc >= -11055:
             return 'Z'
     return ''
 
 
-def write_js(games_dict):
-    print("in try")
-    global cur, con
-    try:
-        print("in try")
-        user_platform = platform.system()
-        if user_platform == 'Linux':
-            con = getdb('Linux_local')
-        elif user_platform == 'Windows':
-            con = getdb('Windows_local')
-        cur = con.cursor()
-    except Exception as e:
-        print(e)
-        print('usage: python index_gen.py local/remote/linux')
-    index_dict = dict()
-    index_dict['00'] = ['#']
-    index_dict['A0'] = ['A']
-    index_dict['B0'] = ['B']
-    index_dict['C0'] = ['C']
-    index_dict['D0'] = ['D']
-    index_dict['E0'] = ['E']
-    index_dict['F0'] = ['F']
-    index_dict['G0'] = ['G']
-    index_dict['H0'] = ['H']
-    index_dict['I0'] = ['I']
-    index_dict['J0'] = ['J']
-    index_dict['K0'] = ['K']
-    index_dict['L0'] = ['L']
-    index_dict['M0'] = ['M']
-    index_dict['N0'] = ['N']
-    index_dict['O0'] = ['O']
-    index_dict['P0'] = ['P']
-    index_dict['Q0'] = ['Q']
-    index_dict['R0'] = ['R']
-    index_dict['S0'] = ['S']
-    index_dict['T0'] = ['T']
-    index_dict['U0'] = ['U']
-    index_dict['V0'] = ['V']
-    index_dict['W0'] = ['W']
-    index_dict['X0'] = ['X']
-    index_dict['Y0'] = ['Y']
-    index_dict['Z0'] = ['Z']
-    print("out for")
-    for gameid in games_dict.keys():
+def writejs(games_dict):
+    for game_id in games_dict.keys():
         print("in")
-        # print gameid
-        name_cn = getnameCN(gameid)
+        # print game_id
+        name_cn = get_name_cn(game_id)
         # print(name_cn)
-        name_en = getnameEN(gameid)
+        name_en = get_name_en(game_id)
         # print(name_en)
         capital_key = multi_get_letter(name_cn)
-        index_dict[capital_key] = [gameid, name_en, name_cn, capital_key]
+        index_dict[capital_key] = [game_id, name_en, name_cn, capital_key]
         # print index_dict[capital_key]
-        image_folder = boardgame_home + slash + image + slash + str(gameid)
-        image_folder_1 = boardgame_home + slash + image + slash + str(gameid) + slash + 'setup'
-        image_folder_2 = boardgame_home + slash + image + slash + str(gameid) + slash + 'flow'
-        image_folder_3 = boardgame_home + slash + image + slash + str(gameid) + slash + 'end'
-        image_folder_4 = boardgame_home + slash + image + slash + str(gameid) + slash + 'stuff'
+        image_folder = boardgame_home + slash + image + slash + str(game_id)
+        image_folder_1 = boardgame_home + slash + image + slash + str(game_id) + slash + 'setup'
+        image_folder_2 = boardgame_home + slash + image + slash + str(game_id) + slash + 'flow'
+        image_folder_3 = boardgame_home + slash + image + slash + str(game_id) + slash + 'end'
+        image_folder_4 = boardgame_home + slash + image + slash + str(game_id) + slash + 'stuff'
         if not os.path.exists(image_folder):
             print("creating folder {}".format(image_folder))
             os.mkdir(image_folder)
@@ -231,9 +218,9 @@ def write_js(games_dict):
         # print letter
         f.write('index_letters['+str(i)+']=\''+letter+'\';\n')
     for i, key in enumerate(sorted(index_dict.keys())):
-        print(key)
+        # print(key)
         gameinfo = index_dict[key]
-        yield print(gameinfo)
+        # print(gameinfo)
         if len(gameinfo) == 1:
             f.write(('index_games['+str(i)+']=[\''+gameinfo[0]+'\',\''+gameinfo[0]+'\'];\n'))
         elif len(gameinfo) == 4:
@@ -251,7 +238,6 @@ def write_js(games_dict):
     f.close()
     print("WRITTEN TO LIST SUCCESS!")
     print(len(index_dict.keys())-27)
-    return
 
 
 """

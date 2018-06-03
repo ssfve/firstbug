@@ -1,25 +1,13 @@
 # -*- coding:utf-8 -*-
 
-import os
-import io
-import requests
-import random
-from sys import argv
-
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
-
-import mysql.connector
-from gamelist import create_gamelist
-import platform
 from api_one import *
 from categorylist import *
 
-
-nameCN_dict = create_gamelist()
-
+nameCN_dict = create_game_list()
 designer_dict = dict()
 designer_dict['Reiner Knizia'] = u'倪睿南'
 designer_dict['Chu-Lan Kao'] = u'高竹岚'
