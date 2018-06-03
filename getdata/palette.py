@@ -54,7 +54,16 @@ def calc_avg_color(img_path):
     quantized = palette[labels.flatten()]
     quantized = quantized.reshape(img.shape)
     dom_color = palette[np.argmax(itemfreq(labels)[:, -1])]
-    color_hex = "{0:02x}{1:02x}{2:02x}".format(clamp(dom_color[0]), clamp(dom_color[1]), clamp(dom_color[2]))
+    #print(dom_color[0])
+    #print(dom_color[1])
+    #print(dom_color[2])
+    amp_factor = 1
+    if(dom_color[0]>200 and dom_color[1]>200 and dom_color[2]>200):
+        amp_factor = 0.8
+    color_red=clamp(dom_color[0],amp_factor)
+    color_green=clamp(dom_color[1],amp_factor)
+    color_blue=clamp(dom_color[2],amp_factor)
+    color_hex = "{0:02x}{1:02x}{2:02x}".format(color_red, color_green, color_blue)
     #print(color_hex)
     svg_path='D://Github/boardgamerules/img/interface/'
     fout = open(svg_path+color_hex+r'.svg','w+')
@@ -65,5 +74,5 @@ def calc_avg_color(img_path):
         fout.writelines(line_array)
     fout.close()
     return "#"+color_hex
-def clamp(x): 
-    return max(0, min(x, 255))
+def clamp(x,amp_factor):
+    return int(max(0, min(x, 255))*amp_factor)

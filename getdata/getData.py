@@ -4,7 +4,7 @@ from palette import create_colorlist
 from api_one import bgg_xml_reader
 from translate_one import bgg_xml_translater
 from style_one import bgg_xml_styler
-from index_gen import *
+from index_gen import index_gen
 
 nameCN_dict = create_gamelist()
 color_dict = create_colorlist()
@@ -42,6 +42,7 @@ if __name__ == '__main__':
         print('starting...')
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
+        print('query')
         index_gen()
         bgg_xml_styler(games_dict)
         print("http://www.boardgamerules.cn/index/gameCover.html?id={0}".format(gameid))

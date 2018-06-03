@@ -91,7 +91,8 @@ def bgg_xml_reader(games_dict):
         game_type = ''
         name= ''
         error_flag = False
-
+        BGG_flag = True
+        
         bayesaverage_subtype = ''
         rank_subtype = ''
         bayesaverage_type = ''
@@ -337,12 +338,40 @@ def bgg_xml_reader(games_dict):
                     suggested_numplayers = input(
                         "Please input suggested_numplayers (default:{}):".format(default_suggested_numplayers))
             print(suggested_numplayers)
+
+            default_language_dependence = 3
+            language_dependence = input(
+                "Please input language_dependence (default:{}):".format(default_language_dependence))
+            while ((not (language_dependence.isdigit()))):
+                if (language_dependence == ""):
+                    language_dependence = default_language_dependence
+                    break
+                else:
+                    print("language_dependence format error")
+                    language_dependence = input(
+                        "Please input language_dependence (default:{}):".format(default_language_dependence))
+            print(language_dependence)
+
             confirm_flag = "n"
             while(confirm_flag == "n"):
-                name = input("Please input name:")
-                print("name is {}".format(name))
+                name = input("Please input English name:")
+                print("English name is {}".format(name))
                 confirm_flag = input("Please confirm(y/n):")
             print(name)
+
+            confirm_flag = "n"
+            while (confirm_flag == "n"):
+                designers = input("Please input designers(separated by comma):")
+                print("designers is {}".format(designers))
+                confirm_flag = input("Please confirm(y/n):")
+            print(designers)
+
+            confirm_flag = "n"
+            while (confirm_flag == "n"):
+                artists = input("Please input artists(separated by comma):")
+                print("artists is {}".format(artists))
+                confirm_flag = input("Please confirm(y/n):")
+            print(artists)
 
             average=0
             averageweight=0
@@ -350,8 +379,6 @@ def bgg_xml_reader(games_dict):
             usersrated=0
 
             mechanics=""
-            designers=""
-            artists=""
             categorys=""
             familys=""
             publishers=""

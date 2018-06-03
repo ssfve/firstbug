@@ -1,3 +1,4 @@
+import sys
 from sys import argv
 import codecs
 
@@ -5,11 +6,7 @@ import platform
 from api_one import *
 from gamelist import create_gamelist
 import mysql.connector
-
-nameCN_dict = create_gamelist()
 import os
-
-
 from sys import argv
 
 """
@@ -156,17 +153,22 @@ def single_get_first(unicode_str):
 #a = multi_get_letter(u'欢迎你')
 #print a
 
+
 def index_gen():
     global cur
+    nameCN_dict = create_gamelist()
+
+    print("in indexgen")
     try:
-        #gameid = int(argv[1])
+        print("in try")
         userPlatform=platform.system()
         if(userPlatform=='Linux'):
             con = getdb('Linux_local')
         elif(userPlatform=='Windows'):
             con = getdb('Windows_local')
         cur = con.cursor()
-    except:
+    except Exception as e:
+        print(e)
         print('usage: python index_gen.py local/remote/linux')
         sys.exit(0)
 
@@ -198,13 +200,14 @@ def index_gen():
     index_dict['X0']=['X']
     index_dict['Y0']=['Y']
     index_dict['Z0']=['Z']
-
+    print("out for")
     for gameid in nameCN_dict.keys():
+        print("in")
         #print gameid
         nameCN = getnameCN(gameid)
-        #print nameCN
+        print(nameCN)
         nameEN = getnameEN(gameid)
-        #print nameEN
+        print(nameEN)
         capital_key = multi_get_letter(nameCN)
         index_dict[capital_key]=[gameid,nameEN,nameCN,capital_key]
         #print index_dict[capital_key]
@@ -215,6 +218,7 @@ def index_gen():
         imgfolder_3 = boardgame_home + slash + image + slash + str(gameid) + slash + 'end'
         imgfolder_4 = boardgame_home + slash + image + slash + str(gameid) + slash + 'stuff'
         if not os.path.exists(imgfolder):
+            print("creating folder {}".format(imgfolder))
             os.mkdir(imgfolder)
         if not os.path.exists(imgfolder_1):
             os.mkdir(imgfolder_1)
@@ -244,7 +248,7 @@ def index_gen():
             f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1].replace('\'','\\\'')+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
     f.close()
     print("WRITTEN TO JS SUCCESS!")
-    
+
     f = codecs.open("./gamelist",'w','utf-8')
     for i, key in enumerate(sorted(index_dict.keys())):
         gameinfo = index_dict[key]

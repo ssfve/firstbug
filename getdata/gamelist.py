@@ -27,6 +27,7 @@ def create_gamelist():
     nameCN_dict[181] = (u'大战役','scarlet')
     nameCN_dict[196] = (u'克里姆林','orange')
     nameCN_dict[199] = (u'曼哈顿','orange')
+    nameCN_dict[215] = (u'地主','purple')
     nameCN_dict[220] = (u'上流社会','purple')
     nameCN_dict[257] = (u'杀死幸运博士','brown')
     nameCN_dict[327] = (u'翻滚路易','scarlet')
