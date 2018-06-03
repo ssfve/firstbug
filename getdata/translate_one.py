@@ -392,9 +392,9 @@ def bgg_xml_translater(games_dict):
             con = getdb('Linux_remote')
             writedb(con,sql)
             print('Linux_remote SQL EXECUTION SUCCESS!')
+        print("exit translate_one")
             
 
-        
 """
 if __name__ == '__main__':
     bgg_xml_translater()

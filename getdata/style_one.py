@@ -5,7 +5,7 @@ import io
 import requests
 import random
 from sys import argv
-
+from index_gen import write_js
 try:
     import xml.etree.cElementTree as ET
 except ImportError:

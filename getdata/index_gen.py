@@ -1,13 +1,8 @@
-import sys
-from sys import argv
 import codecs
-
-import platform
 from api_one import *
 from gamelist import create_gamelist
-import mysql.connector
-import os
-from sys import argv
+nameCN_dict = create_gamelist()
+
 
 """
 try:
@@ -56,6 +51,7 @@ def getnameEN(gameid):
         print(sql)
         print(e)
 
+
 def getnameCN(gameid):
     global cur
     sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(gameid)
@@ -72,6 +68,7 @@ def getnameCN(gameid):
     except Exception as e:
         print(e)
 
+
 def multi_get_letter(str_input):
     unicode_str = str_input
     return_list = []
@@ -84,6 +81,7 @@ def multi_get_letter(str_input):
         return_list.append(letter)
     #print(return_list)
     return "".join(return_list)
+
 
 def single_get_first(unicode_str):
     str1 = unicode_str.encode('GBK')
@@ -150,60 +148,53 @@ def single_get_first(unicode_str):
           return 'Z'
     return ''
 
-#a = multi_get_letter(u'欢迎你')
-#print a
 
-
-def index_gen():
-    global cur
-    nameCN_dict = create_gamelist()
-
-    print("in indexgen")
+def write_js():
+    global cur, con
     try:
         print("in try")
-        userPlatform=platform.system()
-        if(userPlatform=='Linux'):
+        user_platform = platform.system()
+        if user_platform == 'Linux':
             con = getdb('Linux_local')
-        elif(userPlatform=='Windows'):
+        elif user_platform == 'Windows':
             con = getdb('Windows_local')
         cur = con.cursor()
     except Exception as e:
         print(e)
         print('usage: python index_gen.py local/remote/linux')
-        sys.exit(0)
 
     index_dict = dict()
-    index_dict['00']=['#']
-    index_dict['A0']=['A']
-    index_dict['B0']=['B']
-    index_dict['C0']=['C']
-    index_dict['D0']=['D']
-    index_dict['E0']=['E']
-    index_dict['F0']=['F']
-    index_dict['G0']=['G']
-    index_dict['H0']=['H']
-    index_dict['I0']=['I']
-    index_dict['J0']=['J']
-    index_dict['K0']=['K']
-    index_dict['L0']=['L']
-    index_dict['M0']=['M']
-    index_dict['N0']=['N']
-    index_dict['O0']=['O']
-    index_dict['P0']=['P']
-    index_dict['Q0']=['Q']
-    index_dict['R0']=['R']
-    index_dict['S0']=['S']
-    index_dict['T0']=['T']
-    index_dict['U0']=['U']
-    index_dict['V0']=['V']
-    index_dict['W0']=['W']
-    index_dict['X0']=['X']
-    index_dict['Y0']=['Y']
-    index_dict['Z0']=['Z']
+    index_dict['00'] = ['#']
+    index_dict['A0'] = ['A']
+    index_dict['B0'] = ['B']
+    index_dict['C0'] = ['C']
+    index_dict['D0'] = ['D']
+    index_dict['E0'] = ['E']
+    index_dict['F0'] = ['F']
+    index_dict['G0'] = ['G']
+    index_dict['H0'] = ['H']
+    index_dict['I0'] = ['I']
+    index_dict['J0'] = ['J']
+    index_dict['K0'] = ['K']
+    index_dict['L0'] = ['L']
+    index_dict['M0'] = ['M']
+    index_dict['N0'] = ['N']
+    index_dict['O0'] = ['O']
+    index_dict['P0'] = ['P']
+    index_dict['Q0'] = ['Q']
+    index_dict['R0'] = ['R']
+    index_dict['S0'] = ['S']
+    index_dict['T0'] = ['T']
+    index_dict['U0'] = ['U']
+    index_dict['V0'] = ['V']
+    index_dict['W0'] = ['W']
+    index_dict['X0'] = ['X']
+    index_dict['Y0'] = ['Y']
+    index_dict['Z0'] = ['Z']
     print("out for")
     for gameid in nameCN_dict.keys():
         print("in")
-        #print gameid
+        # print gameid
         nameCN = getnameCN(gameid)
         print(nameCN)
         nameEN = getnameEN(gameid)
@@ -262,8 +253,11 @@ def index_gen():
     f.close()
     print("WRITTEN TO LIST SUCCESS!")
     print(len(index_dict.keys())-27)
+    return
 
-
+"""
 if __name__ == '__main__':
-    index_gen()
+    write_js()
+"""
+
 
