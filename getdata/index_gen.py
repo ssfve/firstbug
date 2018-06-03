@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 import codecs
 from api_one import *
 from gamelist import create_gamelist
@@ -13,12 +15,12 @@ Exception:
 schema_name = 'boardgames'
 table_name_en = 'bggdata'
 table_name_cn = 'bggdatacn'
-#img_home = os.getenv('IMG_HOME')
+# img_home = os.getenv('IMG_HOME')
 
 boardgame_home = os.getenv('BG_HOME')
 pageGenerator_home = os.getenv('PG_HOME')
 img_home = os.getenv('IMG_HOME')
-#print boardgame_home
+# print boardgame_home
 
 slash = '/'
 image = 'img'
@@ -28,24 +30,24 @@ pageFolder = 'page'
 variablesFolder = 'variables'
 index_variables_filename = 'index.variables.js'
 
-#js_page_folder = boardgame_home + slash + jsFolder + slash + pageFolder + slash
+# js_page_folder = boardgame_home + slash + jsFolder + slash + pageFolder + slash
 
 js_page_folder = boardgame_home + slash + indexFolder + slash + variablesFolder + slash
-#/opt/mount/apache-tomcat-9.0.0.M21/webapps/boardgamerules/index/variables
+# /opt/mount/apache-tomcat-9.0.0.M21/webapps/boardgamerules/index/variables
 
 js_index_path = js_page_folder + index_variables_filename
-cur = None
+
 
 def getnameEN(gameid):
     global cur
     sql = 'SELECT name FROM '+schema_name+'.'+table_name_en+' WHERE gameid = '+str(gameid)
-        #print sql
+    # print sql
     try:
         cur.execute(sql)
         records = cur.fetchall()
         data = list(records[0])
         nameEN = data[0]
-        #print('EN SQL EXECUTION SUCCESS!')
+        # print('EN SQL EXECUTION SUCCESS!')
         return nameEN
     except Exception as e:
         print(sql)
@@ -55,15 +57,15 @@ def getnameEN(gameid):
 def getnameCN(gameid):
     global cur
     sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(gameid)
-        #print sql
+    # print sql
     try:
         cur.execute(sql)
         records = cur.fetchall()
-        #print records
+        # print records
         data = list(records[0])
-        #print data
+        # print data
         nameCN = data[0]
-        #print('CN SQL EXECUTION SUCCESS!')
+        # print('CN SQL EXECUTION SUCCESS!')
         return nameCN
     except Exception as e:
         print(e)
@@ -73,83 +75,86 @@ def multi_get_letter(str_input):
     unicode_str = str_input
     return_list = []
     for one_unicode in unicode_str:
-        #print one_unicode
+        # print one_unicode
         try:
             letter = single_get_first(one_unicode).decode("UTF-8")
         except Exception as e:
+            print(e)
             letter = single_get_first(one_unicode)
         return_list.append(letter)
-    #print(return_list)
+    # print(return_list)
     return "".join(return_list)
 
 
 def single_get_first(unicode_str):
     str1 = unicode_str.encode('GBK')
-    #print(str1)
+    # print(str1)
     try:
         ord(str1)
-        #print str1
+        # print str1
         return str1
-    except:
-        #print(ord(str1[0]))
-        #print(ord(str1[1]))
-        #print(ord('a'))
+    except Exception as e:
+        print(e)
+        # print(ord(str1[0]))
+        # print(ord(str1[1]))
+        # print(ord('a'))
         asc = str1[0] * 256 + str1[1] - 65536
-        #print asc
-        if asc >= -20319 and asc <= -20284:
-          return 'A'
-        if asc >= -20283 and asc <= -19776:
-          return 'B'
-        if asc >= -19775 and asc <= -19219:
-          return 'C'
-        if asc >= -6471 and asc <= -5919:
-          return 'C'
-        if asc >= -19218 and asc <= -18711:
-          return 'D'
-        if asc >= -18710 and asc <= -18527:
-          return 'E'
-        if asc >= -18526 and asc <= -18240:
-          return 'F'
-        if asc >= -18239 and asc <= -17923:
-          return 'G'
-        if asc >= -17922 and asc <= -17418:
-          return 'H'
-        if asc >= -17417 and asc <= -16475:
-          return 'J'
-        if asc >= -16474 and asc <= -16213:
-          return 'K'
-        if asc >= -8239 and asc <= -8239:
-          return 'K'
-        if asc >= -16212 and asc <= -15641:
-          return 'L'
+        # print asc
+        if -20284 >= asc >= -20319:
+            return 'A'
+        if -19776 >= asc >= -20283:
+            return 'B'
+        if -19219 >= asc >= -19775:
+            return 'C'
+        if -5919 >= asc >= -6471:
+            return 'C'
+        if -18711 >= asc >= -19218:
+            return 'D'
+        if -18527 >= asc >= -18710:
+            return 'E'
+        if -18240 >= asc >= -18526:
+            return 'F'
+        if -17923 >= asc >= -18239:
+            return 'G'
+        if -17418 >= asc >= -17922:
+            return 'H'
+        if -16475 >= asc >= -17417:
+            return 'J'
+        if -16213 >= asc >= -16474:
+            return 'K'
+        if -8239 >= asc >= -8239:
+            return 'K'
+        if -15641 >= asc >= -16212:
+            return 'L'
         if asc >= -15640 and asc <= -15166:
-          return 'M'
+            return 'M'
         if asc >= -15165 and asc <= -14923:
-          return 'N'
+            return 'N'
         if asc >= -14922 and asc <= -14915:
-          return 'O'
+            return 'O'
         if asc >= -14914 and asc <= -14631:
-          return 'P'
+            return 'P'
         if asc >= -14630 and asc <= -14150:
-          return 'Q'
+            return 'Q'
         if asc >= -14149 and asc <= -14091:
-          return 'R'
+            return 'R'
         if asc >= -14090 and asc <= -13315:
-          return 'S'
+            return 'S'
         if asc >= -13314 and asc <= -12839:
-          return 'T'
+            return 'T'
         if asc >= -12838 and asc <= -12557:
-          return 'W'
+            return 'W'
         if asc >= -12556 and asc <= -11848:
-          return 'X'
+            return 'X'
         if asc >= -11847 and asc <= -11056:
-          return 'Y'
-        if asc >= -11055 and asc <= -10247:
-          return 'Z'
+            return 'Y'
+        if -10247 >= asc >= -11055:
+            return 'Z'
     return ''
 
 
-def write_js():
+def write_js(games_dict):
+    print("in try")
     global cur, con
     try:
         print("in try")
@@ -162,7 +167,6 @@ def write_js():
     except Exception as e:
         print(e)
         print('usage: python index_gen.py local/remote/linux')
-
     index_dict = dict()
     index_dict['00'] = ['#']
     index_dict['A0'] = ['A']
@@ -192,43 +196,40 @@ def write_js():
     index_dict['Y0'] = ['Y']
     index_dict['Z0'] = ['Z']
     print("out for")
-    for gameid in nameCN_dict.keys():
+    for gameid in games_dict.keys():
         print("in")
         # print gameid
-        nameCN = getnameCN(gameid)
-        print(nameCN)
-        nameEN = getnameEN(gameid)
-        print(nameEN)
-        capital_key = multi_get_letter(nameCN)
-        index_dict[capital_key]=[gameid,nameEN,nameCN,capital_key]
-        #print index_dict[capital_key]
-
-        imgfolder = boardgame_home + slash + image + slash + str(gameid)
-        imgfolder_1 = boardgame_home + slash + image + slash + str(gameid) + slash + 'setup'
-        imgfolder_2 = boardgame_home + slash + image + slash + str(gameid) + slash + 'flow'
-        imgfolder_3 = boardgame_home + slash + image + slash + str(gameid) + slash + 'end'
-        imgfolder_4 = boardgame_home + slash + image + slash + str(gameid) + slash + 'stuff'
-        if not os.path.exists(imgfolder):
-            print("creating folder {}".format(imgfolder))
-            os.mkdir(imgfolder)
-        if not os.path.exists(imgfolder_1):
-            os.mkdir(imgfolder_1)
-        if not os.path.exists(imgfolder_2):
-            os.mkdir(imgfolder_2)
-        if not os.path.exists(imgfolder_3):
-            os.mkdir(imgfolder_3)
-        if not os.path.exists(imgfolder_4):
-            os.mkdir(imgfolder_4)
-
-    #print index_dict
-    #default open file only accept ascii
-    f = codecs.open(js_index_path,'w','utf-8')
+        name_cn = getnameCN(gameid)
+        # print(name_cn)
+        name_en = getnameEN(gameid)
+        # print(name_en)
+        capital_key = multi_get_letter(name_cn)
+        index_dict[capital_key] = [gameid, name_en, name_cn, capital_key]
+        # print index_dict[capital_key]
+        image_folder = boardgame_home + slash + image + slash + str(gameid)
+        image_folder_1 = boardgame_home + slash + image + slash + str(gameid) + slash + 'setup'
+        image_folder_2 = boardgame_home + slash + image + slash + str(gameid) + slash + 'flow'
+        image_folder_3 = boardgame_home + slash + image + slash + str(gameid) + slash + 'end'
+        image_folder_4 = boardgame_home + slash + image + slash + str(gameid) + slash + 'stuff'
+        if not os.path.exists(image_folder):
+            print("creating folder {}".format(image_folder))
+            os.mkdir(image_folder)
+        if not os.path.exists(image_folder_1):
+            os.mkdir(image_folder_1)
+        if not os.path.exists(image_folder_2):
+            os.mkdir(image_folder_2)
+        if not os.path.exists(image_folder_3):
+            os.mkdir(image_folder_3)
+        if not os.path.exists(image_folder_4):
+            os.mkdir(image_folder_4)
+    # print index_dict
+    # default open file only accept ascii
+    f = codecs.open(js_index_path, 'w', 'utf-8')
     f.write("var index_letters = [];\n")
     f.write("var index_games = [];\n")
-    for i, letter in enumerate([chr(x) for x in range(65,91)]):
-        #print letter
+    for i, letter in enumerate([chr(x) for x in range(65, 91)]):
+        # print letter
         f.write('index_letters['+str(i)+']=\''+letter+'\';\n')
-
     for i, key in enumerate(sorted(index_dict.keys())):
         print(key)
         gameinfo = index_dict[key]
@@ -236,16 +237,13 @@ def write_js():
         if len(gameinfo) == 1:
             f.write(('index_games['+str(i)+']=[\''+gameinfo[0]+'\',\''+gameinfo[0]+'\'];\n'))
         elif len(gameinfo) == 4:
-            f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+',\''+gameinfo[1].replace('\'','\\\'')+'\',\''+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
+            part_2 = '\',\''+gameinfo[1].replace('\'', '\\\'')+'\',\''
+            f.write(('index_games['+str(i)+']=['+str(gameinfo[0])+part_2+gameinfo[2]+'\',\''+gameinfo[3]+'\'];\n'))
     f.close()
     print("WRITTEN TO JS SUCCESS!")
-
-    f = codecs.open("./gamelist",'w','utf-8')
+    f = codecs.open("./gamelist", 'w', 'utf-8')
     for i, key in enumerate(sorted(index_dict.keys())):
         gameinfo = index_dict[key]
-        #print(gameinfo)
-        #len 1 is the letter
-        #len 4 is the game name
         if len(gameinfo) == 1:
             f.write(str(gameinfo[0])+'\n')
         elif len(gameinfo) == 4:
@@ -255,9 +253,8 @@ def write_js():
     print(len(index_dict.keys())-27)
     return
 
+
 """
 if __name__ == '__main__':
     write_js()
 """
-
-
