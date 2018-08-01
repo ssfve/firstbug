@@ -101,9 +101,9 @@ def bgg_xml_styler(games_dict):
             writedb(con,sql)
             print(userPlatform+' SQL EXECUTION SUCCESS!')
         elif(userPlatform=='Windows'):
-            con = getdb('Windows_local')
-            writedb(con,sql)
-            print(userPlatform+' SQL EXECUTION SUCCESS!')
+            #con = getdb('Windows_local')
+            #writedb(con,sql)
+            #print(userPlatform+' SQL EXECUTION SUCCESS!')
             con = getdb('Linux_remote')
             writedb(con,sql)
             print('Linux_remote SQL EXECUTION SUCCESS!')

@@ -57,19 +57,13 @@ index_dict['WZZZZZ'] = ['X']
 index_dict['XZZZZZ'] = ['Y']
 index_dict['YZZZZZ'] = ['Z']
 
-def get_name_en(game_id):
+def get_name_en(game_id,cur):
     sql = 'SELECT name FROM '+schema_name+'.'+table_name_en+' WHERE gameid = '+str(game_id)
     # print sql
     try:
-        user_platform = platform.system()
-        if user_platform == 'Linux':
-            con = getdb('Linux_local')
-        elif user_platform == 'Windows':
-            con = getdb('Linux_remote')
-        cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
-        con.close()
+        #con.close()
         data = list(records[0])
         name_en = data[0]
         # print('EN SQL EXECUTION SUCCESS!')
@@ -78,20 +72,12 @@ def get_name_en(game_id):
         print(e)
 
 
-def get_name_cn(game_id):
+def get_name_cn(game_id,cur):
     sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(game_id)
     #print(sql)
     try:
-        user_platform = platform.system()
-        print(user_platform)
-        if user_platform == 'Linux':
-            con = getdb('Linux_local')
-        elif user_platform == 'Windows':
-            con = getdb('Linux_remote')
-        cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
-        con.close()
         #print(records)
         data = list(records[0])
         # print data
@@ -132,18 +118,11 @@ def single_get_first(unicode_str,game_id):
         # print str1
         return str1
     except Exception as e:
-<<<<<<< HEAD
         #print(ord(str1[0]))
         #print(ord(str1[1]))
         #if(game_id==168700):
             #print(str1[0])
             #print(str1[1])
-=======
-        #print(e)
-        # print(ord(str1[0]))
-        # print(ord(str1[1]))
-        # print(ord('a'))
->>>>>>> 6647068c060619b14f61b5f08ca19560783e398c
         asc = str1[0] * 256 + str1[1] - 65536
         ascPositive = asc + 65536
         # print asc
@@ -212,12 +191,19 @@ def single_get_first(unicode_str,game_id):
 
 
 def writejs(games_dict):
+    user_platform = platform.system()
+    # print(user_platform)
+    if user_platform == 'Linux':
+        con = getdb('Linux_local')
+    elif user_platform == 'Windows':
+        con = getdb('Linux_remote')
+    cur = con.cursor()
     for game_id in games_dict.keys():
         # yprint("in")
         # print(game_id)
-        name_cn = get_name_cn(game_id)
+        name_cn = get_name_cn(game_id,cur)
         #print(name_cn)
-        name_en = get_name_en(game_id)
+        name_en = get_name_en(game_id,cur)
         # print(name_en)
         capital_key = multi_get_letter(name_cn,game_id)
         #if game_id == 168700:
@@ -245,6 +231,7 @@ def writejs(games_dict):
         if not os.path.exists(image_folder_4):
             os.mkdir(image_folder_4)
     # print index_dict
+    con.close()
     # default open file only accept ascii
     f = codecs.open(js_index_path, 'w', 'utf-8')
     f.write("var index_letters = [];\n")
