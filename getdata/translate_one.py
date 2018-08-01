@@ -81,7 +81,7 @@ def bgg_xml_translater(games_dict):
                 cur = con.cursor()
             elif(userPlatform=='Windows'):
                 print('System is Windows')
-                con = getdb('Windows_local')
+                con = getdb('Linux_remote')
                 cur = con.cursor()
             cur.execute(sql)
             records = cur.fetchall()
@@ -374,9 +374,9 @@ def bgg_xml_translater(games_dict):
             writedb(con,sql)
             print(userPlatform+' SQL EXECUTION SUCCESS!')
         elif(userPlatform=='Windows'):
-            con = getdb('Windows_local')
-            writedb(con,sql)
-            print(userPlatform+' SQL EXECUTION SUCCESS!')
+            #con = getdb('Windows_local')
+            #writedb(con,sql)
+            #print(userPlatform+' SQL EXECUTION SUCCESS!')
             con = getdb('Linux_remote')
             writedb(con,sql)
             print('Linux_remote SQL EXECUTION SUCCESS!')
