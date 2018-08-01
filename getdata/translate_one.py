@@ -367,7 +367,7 @@ def bgg_xml_translater(games_dict):
         #'"'+str(designer_str)+'","'+str(category_str)+'","'+str(mechanism_str)+'","'+str(publisher_str)+'",'+str(maxplayer)+','+str(bestplayer)+',"'+str(self.name)+'"'
 
         sql = 'REPLACE INTO '+schema_name+'.'+table_name_cn+column_str+'values'+value_str
-        #print(sql)
+        print(sql)
         userPlatform=platform.system()
         if(userPlatform=='Linux'):
             con = getdb('Linux_local')

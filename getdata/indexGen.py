@@ -28,33 +28,33 @@ js_page_folder = boardgame_home + slash + indexFolder + slash + variablesFolder 
 js_index_path = js_page_folder + index_variables_filename
 
 index_dict = dict()
-index_dict['00'] = ['#']
-index_dict['A0'] = ['A']
-index_dict['B0'] = ['B']
-index_dict['C0'] = ['C']
-index_dict['D0'] = ['D']
-index_dict['E0'] = ['E']
-index_dict['F0'] = ['F']
-index_dict['G0'] = ['G']
-index_dict['H0'] = ['H']
-index_dict['I0'] = ['I']
-index_dict['J0'] = ['J']
-index_dict['K0'] = ['K']
-index_dict['L0'] = ['L']
-index_dict['M0'] = ['M']
-index_dict['N0'] = ['N']
-index_dict['O0'] = ['O']
-index_dict['P0'] = ['P']
-index_dict['Q0'] = ['Q']
-index_dict['R0'] = ['R']
-index_dict['S0'] = ['S']
-index_dict['T0'] = ['T']
-index_dict['U0'] = ['U']
-index_dict['V0'] = ['V']
-index_dict['W0'] = ['W']
-index_dict['X0'] = ['X']
-index_dict['Y0'] = ['Y']
-index_dict['Z0'] = ['Z']
+index_dict['000000'] = ['#']
+index_dict['9ZZZZZ'] = ['A']
+index_dict['AZZZZZ'] = ['B']
+index_dict['BZZZZZ'] = ['C']
+index_dict['CZZZZZ'] = ['D']
+index_dict['DZZZZZ'] = ['E']
+index_dict['EZZZZZ'] = ['F']
+index_dict['FZZZZZ'] = ['G']
+index_dict['GZZZZZ'] = ['H']
+index_dict['HZZZZZ'] = ['I']
+index_dict['IZZZZZ'] = ['J']
+index_dict['JZZZZZ'] = ['K']
+index_dict['KZZZZZ'] = ['L']
+index_dict['LZZZZZ'] = ['M']
+index_dict['MZZZZZ'] = ['N']
+index_dict['NZZZZZ'] = ['O']
+index_dict['OZZZZZ'] = ['P']
+index_dict['PZZZZZ'] = ['Q']
+index_dict['QZZZZZ'] = ['R']
+index_dict['RZZZZZ'] = ['S']
+index_dict['SZZZZZ'] = ['T']
+index_dict['TZZZZZ'] = ['U']
+index_dict['UZZZZZ'] = ['V']
+index_dict['VZZZZZ'] = ['W']
+index_dict['WZZZZZ'] = ['X']
+index_dict['XZZZZZ'] = ['Y']
+index_dict['YZZZZZ'] = ['Z']
 
 def get_name_en(game_id):
     sql = 'SELECT name FROM '+schema_name+'.'+table_name_en+' WHERE gameid = '+str(game_id)
@@ -79,6 +79,7 @@ def get_name_en(game_id):
 
 def get_name_cn(game_id):
     sql = 'SELECT nameCN FROM '+schema_name+'.'+table_name_cn+' WHERE gameid = '+str(game_id)
+    #print(sql)
     try:
         user_platform = platform.system()
         if user_platform == 'Linux':
@@ -89,7 +90,7 @@ def get_name_cn(game_id):
         cur.execute(sql)
         records = cur.fetchall()
         con.close()
-        # print records
+        #print(records)
         data = list(records[0])
         # print data
         name_cn = data[0]
@@ -100,35 +101,44 @@ def get_name_cn(game_id):
         print(e)
 
 
-def multi_get_letter(str_input):
+def multi_get_letter(str_input,game_id):
     unicode_str = str_input
     return_list = []
     for one_unicode in unicode_str:
-        # print one_unicode
+        #if(game_id==203716):
+            #print(one_unicode)
         try:
-            letter = single_get_first(one_unicode).decode("UTF-8")
+            #if(game_id==203716):
+                #print("in")
+            letter = single_get_first(one_unicode,game_id).decode("UTF-8")
         except Exception as e:
-            print(e)
-            letter = single_get_first(one_unicode)
+            #if(game_id==203716):
+                #print("in2")
+            letter = single_get_first(one_unicode,game_id)
         return_list.append(letter)
-    # print(return_list)
+        #if(game_id==203716):
+    #print(return_list)
     return "".join(return_list)
 
 
-def single_get_first(unicode_str):
+def single_get_first(unicode_str,game_id):
     str1 = unicode_str.encode('GBK')
-    # print(str1)
+    #if(game_id==203716):
+        #print(str1)
     try:
         ord(str1)
         # print str1
         return str1
     except Exception as e:
-        print(e)
-        # print(ord(str1[0]))
-        # print(ord(str1[1]))
-        # print(ord('a'))
+        #print(ord(str1[0]))
+        #print(ord(str1[1]))
+        #if(game_id==168700):
+            #print(str1[0])
+            #print(str1[1])
         asc = str1[0] * 256 + str1[1] - 65536
+        ascPositive = asc + 65536
         # print asc
+        #print(ascPositive)
         if -20284 >= asc >= -20319:
             return 'A'
         if -19776 >= asc >= -20283:
@@ -139,6 +149,8 @@ def single_get_first(unicode_str):
             return 'C'
         if -18711 >= asc >= -19218:
             return 'D'
+        if ascPositive == 57301:
+            return 'D'
         if -18527 >= asc >= -18710:
             return 'E'
         if -18240 >= asc >= -18526:
@@ -148,6 +160,8 @@ def single_get_first(unicode_str):
         if -17418 >= asc >= -17922:
             return 'H'
         if -16475 >= asc >= -17417:
+            return 'J'
+        if ascPositive == 48629:
             return 'J'
         if -16213 >= asc >= -16474:
             return 'K'
@@ -169,7 +183,13 @@ def single_get_first(unicode_str):
             return 'R'
         if -13315 >= asc >= -14090:
             return 'S'
+        if ascPositive == 57847:
+            return 'S'
         if -12839 >= asc >= -13314:
+            return 'T'
+        if ascPositive == 57514:
+            return 'T'
+        if 57847 < ascPositive <= 63419:
             return 'T'
         if -12557 >= asc >= -12838:
             return 'W'
@@ -179,18 +199,24 @@ def single_get_first(unicode_str):
             return 'Y'
         if -10247 >= asc >= -11055:
             return 'Z'
-    return ''
+        return ''
 
 
 def writejs(games_dict):
     for game_id in games_dict.keys():
-        print("in")
-        # print game_id
+        # yprint("in")
+        # print(game_id)
         name_cn = get_name_cn(game_id)
-        # print(name_cn)
+        #print(name_cn)
         name_en = get_name_en(game_id)
         # print(name_en)
-        capital_key = multi_get_letter(name_cn)
+        capital_key = multi_get_letter(name_cn,game_id)
+        #if game_id == 168700:
+            #print(capital_key)
+        #if game_id == 228867:
+            #print(capital_key)
+        if capital_key in index_dict:
+            capital_key = capital_key + "-1"
         index_dict[capital_key] = [game_id, name_en, name_cn, capital_key]
         # print index_dict[capital_key]
         image_folder = boardgame_home + slash + image + slash + str(game_id)
@@ -231,10 +257,12 @@ def writejs(games_dict):
     f = codecs.open("./gamelist", 'w', 'utf-8')
     for i, key in enumerate(sorted(index_dict.keys())):
         gameinfo = index_dict[key]
+        #if key == 'JS':
+            #print(gameinfo)
         if len(gameinfo) == 1:
             f.write(str(gameinfo[0])+'\n')
         elif len(gameinfo) == 4:
-            f.write(str(gameinfo[2])+'\n')
+            f.write(str(gameinfo[2])+"-"+str(gameinfo[0])+'\n')
     f.close()
     print("WRITTEN TO LIST SUCCESS!")
     print(len(index_dict.keys())-27)

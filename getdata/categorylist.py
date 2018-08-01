@@ -119,7 +119,7 @@ def create_mechaniclist():
     mechanic_dict['Campaign / Battle Card Driven']='卡驱'
     mechanic_dict['Card Drafting']='卡牌轮选'
     mechanic_dict['Chit-Pull System']='板块暗抽'
-    mechanic_dict['Co-operative Play']='合作'
+    mechanic_dict['Cooperative Play']='合作'
     mechanic_dict['Commodity Speculation']='货品估价'
     mechanic_dict['Crayon Rail System']='画线连接'
     mechanic_dict['Deck / Pool Building']='池库构筑(DBG)'
