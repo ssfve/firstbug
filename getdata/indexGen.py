@@ -9,7 +9,8 @@ table_name_en = 'bggdata'
 table_name_cn = 'bggdatacn'
 # img_home = os.getenv('IMG_HOME')
 
-boardgame_home = os.getenv('BG_HOME')
+#boardgame_home = os.getenv('BG_HOME')
+boardgame_home = "D:/Github/boardgamerules"
 pageGenerator_home = os.getenv('PG_HOME')
 img_home = os.getenv('IMG_HOME')
 # print boardgame_home
@@ -64,7 +65,7 @@ def get_name_en(game_id):
         if user_platform == 'Linux':
             con = getdb('Linux_local')
         elif user_platform == 'Windows':
-            con = getdb('Windows_local')
+            con = getdb('Linux_remote')
         cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
@@ -82,10 +83,11 @@ def get_name_cn(game_id):
     #print(sql)
     try:
         user_platform = platform.system()
+        print(user_platform)
         if user_platform == 'Linux':
             con = getdb('Linux_local')
         elif user_platform == 'Windows':
-            con = getdb('Windows_local')
+            con = getdb('Linux_remote')
         cur = con.cursor()
         cur.execute(sql)
         records = cur.fetchall()
@@ -130,11 +132,18 @@ def single_get_first(unicode_str,game_id):
         # print str1
         return str1
     except Exception as e:
+<<<<<<< HEAD
         #print(ord(str1[0]))
         #print(ord(str1[1]))
         #if(game_id==168700):
             #print(str1[0])
             #print(str1[1])
+=======
+        #print(e)
+        # print(ord(str1[0]))
+        # print(ord(str1[1]))
+        # print(ord('a'))
+>>>>>>> 6647068c060619b14f61b5f08ca19560783e398c
         asc = str1[0] * 256 + str1[1] - 65536
         ascPositive = asc + 65536
         # print asc

@@ -404,6 +404,7 @@ def create_game_list():
     nameCN_dict[142765] = (u'跳蚤市场', 'cyan')
     nameCN_dict[143157] = (u'拯救泰坦尼克号','blue')
     nameCN_dict[143401] = (u'云南','lime')
+    nameCN_dict[143405] = (u'迷梦林', 'lime')
     nameCN_dict[143515] = (u'煤炭大亨','brown')
     nameCN_dict[143693] = (u'玻璃之路','brown')
     nameCN_dict[143884] = (u'骰子街','lightblue')
