@@ -42,8 +42,8 @@ if __name__ == '__main__':
     if mode == 'all':
         bgg_xml_reader(games_dict)
         bgg_xml_translater(games_dict)
-        writejs(nameCN_dict)
-        bgg_xml_styler(games_dict)
+        #writejs(nameCN_dict)
+        #bgg_xml_styler(games_dict)
         print("http://www.boardgamerules.cn/index/gameCover.html?id={0}".format(gameId))
     if mode == 'one':
         bgg_xml_reader(games_dict)
